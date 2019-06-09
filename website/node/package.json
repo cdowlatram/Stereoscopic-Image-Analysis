@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server for the stereoscopic image analysis website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdowlatram/Stereoscopic-Image-Analysis.git"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
