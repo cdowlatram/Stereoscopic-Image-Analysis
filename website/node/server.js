@@ -17,6 +17,14 @@ app.get('/', (req, res) => {
 	res.sendFile(index_path);
 });
 
+// Route for API
+app.get('/api', (req,res) => {
+	res.json({
+		'type': 'test',
+		'message': 'Its that easy!'
+	});
+});
+
 // Initializes server
 app.listen(config.port, () => {
 	console.log('Server is listening on port ' + config.port.toString())
