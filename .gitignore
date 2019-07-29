@@ -1,2 +1,3 @@
 website/node/node_modules/*
 # website/node/config.js
+__pycache__/
