@@ -1,0 +1,38 @@
+CREATE TABLE Focal_Lengths (
+	data_id INT NOT NULL AUTO_INCREMENT,
+    image_id INT NOT NULL,
+    value DECIMAL(4,1) NOT NULL,
+    PRIMARY KEY(data_id),
+    FOREIGN KEY (image_id) REFERENCES Images(image_id)
+);
+
+CREATE TABLE Sensor_Widths (
+	data_id INT NOT NULL AUTO_INCREMENT,
+    image_id INT NOT NULL,
+    value DECIMAL(4,1) NOT NULL,
+    PRIMARY KEY(data_id),
+    FOREIGN KEY (image_id) REFERENCES Images(image_id)
+);
+
+CREATE TABLE Images (
+	image_id INT NOT NULL AUTO_INCREMENT,
+    image_left VARCHAR(40) NOT NULL,
+	image_right VARCHAR(40) DEFAULT NULL,
+    PRIMARY KEY(image_id)
+);
+
+CREATE TABLE Measurements (
+	data_id INT NOT NULL AUTO_INCREMENT,
+    image_id INT NOT NULL,
+    point_one POINT NOT NULL,
+	point_two POINT NOT NULL,
+	measurement DECIMAL(7,1) NOT NULL,
+    PRIMARY KEY(data_id),
+    FOREIGN KEY (image_id) REFERENCES Images(image_id)
+);
+
+SELECT Images.image_left, Focal_Lengths.value FROM Images INNER JOIN Focal_Lengths ON Images.image_id = Focal_Lengths.image_id
+
+SELECT Images.image_left, Sensor_Widths.value FROM Images INNER JOIN Sensor_Widths ON Images.image_id = Sensor_Widths.image_id
+
+SELECT Images.image_left, Images.image_right, Measurements.point_one, Measurements.point_two, Measurements.measurement FROM Images INNER JOIN Measurements ON Images.image_id = Measurements.image_id
