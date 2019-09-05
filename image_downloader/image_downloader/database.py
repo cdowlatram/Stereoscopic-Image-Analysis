@@ -50,8 +50,24 @@ class Database():
 		try:
 			with self.connection.cursor() as cursor:
 			
-				query = 'INSERT INTO Focal_Lengths VALUES (%s, %s);'
+				query = 'INSERT INTO Focal_Lengths (image_id, value) VALUES (%s, %s);'
 				cursor.execute(query, (image_id, focal_length))
+
+			self.connection.commit()
+
+		except Exception as e:
+			print(e)
+			return False
+
+		return True
+		
+	def add_sensor_width(self, image_id, sensor_width):
+	
+		try:
+			with self.connection.cursor() as cursor:
+			
+				query = 'INSERT INTO Sensor_Widths (image_id, value) VALUES (%s, %s);'
+				cursor.execute(query, (image_id, sensor_width))
 
 			self.connection.commit()
 

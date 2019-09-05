@@ -1,37 +1,93 @@
 import glob
+import ntpath
+import progressbar
 import sys
 
 import config
 from image_downloader.database import Database
 from image_downloader.scanner import Scanner
+from image_downloader.sensordatabase import SensorDatabase
 
 
-if len(sys.argv) < 3:
-	print('You must designate one of the following commands as an arguement:')
-	print('focal_length (path)')
-
-scanner = Scanner()
-# database = Database()
+sensor_database = SensorDatabase()
+if not sensor_database.import_db(config.sensor_db_path):
+	sys.exit(1)
+scanner = Scanner(sensor_database)
+database = Database()
 
 def add_new_images():
 
-	files = glob.iglob(config.files_path + '/*.jpg', recursive=True)
 	count = 0
 	success = 0
-	values = []
+	fl_values = []
+	sw_values = []
+	files = list(glob.iglob(config.files_path + '/*.jpg', recursive=True))
+	
+	progress = progressbar.ProgressBar(maxval=len(files), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+	progress.start()
+	
 	for file in files:
+	
 		count += 1
-		value = scanner.get_focal_length(file)
-		if value:
-			success += 1
-			if value not in values:
-				values.append(value)
-				
-	values.sort()
+		progress.update(count)
+		
+		exif_data = scanner.get_exif_data(file)
+		if not exif_data:
+			continue
+			
+		focal_length = scanner.get_focal_length(exif_data)
+		sensor_width = scanner.get_sensor_width(exif_data)
+		
+		if not (focal_length or sensor_width):
+			continue
+		
+		image_id = database.add_image(ntpath.basename(file))
+		if not image_id:
+			print('Failed adding ' + file + ' to database.')
+			return False
+		success += 1
+		
+		if focal_length:
+			if not database.add_focal_length(image_id, focal_length):
+				print('Failed adding focal length for ' + file + ' to database.')
+				return False
+			
+			if focal_length not in fl_values:
+				fl_values.append(focal_length)
+		
+		if sensor_width:
+			if not database.add_sensor_width(image_id, sensor_width):
+				print('Failed adding sensor width for ' + file + ' to database.')
+				return False
+			
+			if sensor_width not in sw_values:
+				sw_values.append(sensor_width)
+	
+	progress.finish()
+	fl_values.sort()
+	sw_values.sort()
+	
 	print('(' + str(success) + '/' + str(count) + ') ' + str(round(success/count, 2)*100) + '% of images added to database.')
-	print(str(len(values)) + ' distinct focal lengths found.')
-	print('Max: ' + str(values[-1]) + ' Min: ' + str(values[0]))
+	print(str(len(fl_values)) + ' distinct focal lengths found.')
+	print('Max: ' + str(fl_values[-1]) + ' Min: ' + str(fl_values[0]))
+	print(str(len(sw_values)) + ' distinct sensor widths found.')
+	print('Max: ' + str(sw_values[-1]) + ' Min: ' + str(sw_values[0]))
+	
+	return True
 
-# add_new_images()
+add_new_images()
 
-# database.connection.close()
+# count = 0
+# files = list(glob.iglob(config.files_path + '/*.jpg', recursive=True))
+# for file in files:
+	# data = scanner.get_exif_data(file)
+	# if scanner.get_sensor_width(data):
+		# count += 1
+
+# sensor_database.not_found.sort()
+# for item in sensor_database.not_found:
+	# print(item)
+# print(str(count) + '/' + str(len(files)))
+
+database.connection.close()
+sys.exit(0)

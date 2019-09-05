@@ -1,10 +1,14 @@
+import csv
 import exifread
-
 import config
 
 class Scanner():
 
-	def _get_exif_data(self, image_path):
+	def __init__(self, sensor_database):
+	
+		self.sensor_database = sensor_database
+
+	def get_exif_data(self, image_path):
 	
 		# Open image and extract EXIF data
 		try:
@@ -16,12 +20,7 @@ class Scanner():
 			
 		return exif_data
 		
-	def get_focal_length(self, image_path):
-	
-		# Get image EXIF data
-		exif_data = self._get_exif_data(image_path)
-		if not exif_data:
-			return False
+	def get_focal_length(self, exif_data):
 		
 		# Try to retrieve focal length
 		try:
@@ -37,3 +36,16 @@ class Scanner():
 		focal_length = round(focal_length.values[0].num / focal_length.values[0].den, 1)
 		
 		return focal_length
+		
+	def get_sensor_width(self, exif_data):
+	
+		# Try to retrive camera make and model
+		try:
+			camera_make = exif_data['Image Make'].values
+			camera_model = exif_data['Image Model'].values
+		except KeyError:
+			return False
+	
+		# Look up camera in database
+		return self.sensor_database.get_sensor_width(camera_make, camera_model)
+		
