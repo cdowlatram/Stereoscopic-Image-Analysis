@@ -21,7 +21,7 @@ class Flickr():
 		self.calls += 1
 		for data in exif_data['photo']['exif']:
 			if data['tag'] == 'FocalLength':
-				return float(data['raw']['_content'].split()[0])
+				return data['raw']['_content'].split()[0]
 		return False
 		
 	def rate_limiter(self):

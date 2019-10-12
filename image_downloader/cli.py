@@ -22,12 +22,14 @@ def flickr_scraper():
 	count = 0
 	last_file = ''
 	files = list(glob.iglob(config.files_path + '/*.jpg', recursive=True))
+	progress = progressbar.ProgressBar(maxval=len(files), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.SimpleProgress(), ' ', progressbar.Percentage(), ' ', progressbar.AdaptiveETA()])
+	
 	if os.path.isfile('index.txt'):
 		with open('index.txt', 'r') as file:
-			index = file.readline()
-			files = files[files.index(index):]
+			index = files.index(file.readline())
+			count = index
+			files = files[index:]
 			
-	progress = progressbar.ProgressBar(maxval=len(files), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 	progress.start()
 	
 	try:
@@ -36,17 +38,30 @@ def flickr_scraper():
 			last_file = file
 			file_id = file.split('.')[0].split('\\')[-1]
 			
-			focal_length = flickr.get_focal_length(file_id)
-			if focal_length:
-				image_id = database.add_image(ntpath.basename(file))
-				database.add_focal_length(image_id, focal_length)
+			try:
+				focal_length = flickr.get_focal_length(file_id)
+				if focal_length:
+					image_id = database.add_image(ntpath.basename(file))
+					if not image_id:
+						print('Error adding ' + file + ' to database')
+						count += 1
+						progress.update(count)
+						continue
+					if not database.add_focal_length(image_id, focal_length):
+						print('Error adding data for ' + file + ' to database')
+			except Exception:
+				count += 1
+				progress.update(count)
+				continue
 			
 			count += 1
 			progress.update(count)
 			
-	except (Exception, KeyboardInterrupt):
+	except KeyboardInterrupt:
 		with open('index.txt', 'w') as file:
 			file.write(last_file)
+			
+		return True
 	
 	progress.finish()
 
