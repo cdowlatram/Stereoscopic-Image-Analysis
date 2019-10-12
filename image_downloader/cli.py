@@ -1,5 +1,6 @@
 import glob
 import ntpath
+import os
 import progressbar
 import sys
 
@@ -7,13 +8,47 @@ import config
 from image_downloader.database import Database
 from image_downloader.scanner import Scanner
 from image_downloader.sensordatabase import SensorDatabase
-
+from image_downloader.flickr import Flickr
 
 sensor_database = SensorDatabase()
 if not sensor_database.import_db(config.sensor_db_path):
 	sys.exit(1)
 scanner = Scanner(sensor_database)
 database = Database()
+flickr = Flickr()
+
+def flickr_scraper():
+
+	count = 0
+	last_file = ''
+	files = list(glob.iglob(config.files_path + '/*.jpg', recursive=True))
+	if os.path.isfile('index.txt'):
+		with open('index.txt', 'r') as file:
+			index = file.readline()
+			files = files[files.index(index):]
+			
+	progress = progressbar.ProgressBar(maxval=len(files), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+	progress.start()
+	
+	try:
+		for file in files:
+		
+			last_file = file
+			file_id = file.split('.')[0].split('\\')[-1]
+			
+			focal_length = flickr.get_focal_length(file_id)
+			if focal_length:
+				image_id = database.add_image(ntpath.basename(file))
+				database.add_focal_length(image_id, focal_length)
+			
+			count += 1
+			progress.update(count)
+			
+	except (Exception, KeyboardInterrupt):
+		with open('index.txt', 'w') as file:
+			file.write(last_file)
+	
+	progress.finish()
 
 def add_new_images():
 
@@ -75,7 +110,8 @@ def add_new_images():
 	
 	return True
 
-add_new_images()
+# add_new_images()
+flickr_scraper()
 
 # count = 0
 # files = list(glob.iglob(config.files_path + '/*.jpg', recursive=True))
