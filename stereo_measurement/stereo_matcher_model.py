@@ -144,13 +144,13 @@ if __name__ == "__main__":
     ap.add_argument("image_left_path", help="path for image left")
     ap.add_argument("image_right_path", help="path for image right")
     ap.add_argument("ref_length", help="reference length")
-    ap.add_argument("ref_length_point1", help="first point of reference length")
-    ap.add_argument("ref_length_point2", help="second point of reference length")
-    ap.add_argument("measure_point1", help="first point of measurement")
-    ap.add_argument("measure_point2", help="second point of measurement")
+    ap.add_argument("ref_length_point1", help="first point of reference length 'x,y'")
+    ap.add_argument("ref_length_point2", help="second point of reference length 'x,y'")
+    ap.add_argument("measure_point1", help="first point of measurement 'x,y'")
+    ap.add_argument("measure_point2", help="second point of measurement 'x,y'")
     args = vars(ap.parse_args())
 
-    stereo = Stereograph(args["image_left_path"], args["image_rightt_path"])
+    stereo = Stereograph(args["image_left_path"], args["image_right_path"])
 
     print(json.dumps({"from": args["measure_point1"],
                       "to": args["measure_point2"],
