@@ -9,21 +9,24 @@ const app = express();
 // Resolves root path
 const root_path = path.resolve(__dirname + '/../');
 
-// Creates file paths
-const index_path = root_path + '/html/index.html';
-
 // Route for index
 app.get('/', (req, res) => {
-	res.sendFile(index_path);
+	res.sendFile(root_path + '/html/index.html');
 });
 
-// Route for API
-app.get('/api', (req,res) => {
-	res.json({
-		'type': 'test',
-		'message': 'Its that easy!'
-	});
+// Serve JS
+app.get('/js/:file', (req, res) => {
+	res.sendFile(root_path + '/js/' + req.params['file']);
 });
+
+// Serve model data
+app.get('/download/:file', (req, res) => {
+	res.sendFile(root_path + '/tfjs/' + req.params['file']);
+});
+
+// app.get('', (req, res) => {
+	
+// });
 
 // Initializes server
 app.listen(config.port, () => {
