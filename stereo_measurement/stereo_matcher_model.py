@@ -10,8 +10,13 @@ class Stereograph:
         self.imgL = cv.imread(left_image_path, 0)
         self.imgR = cv.imread(right_image_path, 0)
 
-        self.imgL = cv.pyrDown(self.imgL)
-        self.imgR = cv.pyrDown(self.imgR)
+        # resize for faster computation
+        scale_percent = 800/self.imgL.shape[1] * 100  # percent of original size, target_size/current_size
+        width = int(self.imgL.shape[1] * scale_percent / 100)
+        height = int(self.imgL.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        self.imgL = cv.resize(self.imgL, dim, interpolation=cv.INTER_AREA)
+        self.imgR = cv.resize(self.imgR, dim, interpolation=cv.INTER_AREA)
 
         # SBGM Settings
         self.window_size = 9
@@ -41,16 +46,12 @@ class Stereograph:
 
         self.disparity = None
         self.image_map_points = None
-        self.image_map = None
         self.scale = 1
 
         # Calculates Disparity
         self.update_settings(self.window_size, self.uniquenessRatio, self.speckleWindowSize, self.speckleRange, self.disp12MaxDiff)
 
     def update_settings(self, window_size, uniquenessRatio, speckleWindowSize, speckleRange, disp12MaxDiff):
-        # minDisparity = self.min_disp,
-        # numDisparities = self.num_disp,
-
         self.window_size = window_size
         self.blockSize = window_size
         self.stereo.setBlockSize(window_size)
@@ -67,7 +68,6 @@ class Stereograph:
         self.disp12MaxDiff = disp12MaxDiff
         self.stereo.setDisp12MaxDiff(disp12MaxDiff)
 
-        # print("computing disparity...")
         self.disparity = self.stereo.compute(self.imgL, self.imgR).astype(np.float32) / 16.0
 
     def show_disparity(self):
@@ -85,45 +85,43 @@ class Stereograph:
         mask = self.disparity > self.disparity.min()
         out_points = points[mask]
         out_colors = colors[mask]
-        self.generate_mapping(out_points, out_colors)
 
-    def generate_mapping(self, verts, colors):
+        # Get image coordinates
+        ixs = np.tile(np.arange(w), (h,1))
+        iys = np.tile(np.arange(h), (w,1)).transpose()
+        out_ixs = ixs[mask]
+        out_iys = iys[mask]
+
+        # Initialize image map points array
+        self.image_map_points = [[dict() for y in range(h)] for x in range(w)]
+        self.generate_mapping(out_points, out_colors, out_ixs, out_iys)
+
+    def generate_mapping(self, verts, colors, ixs, iys):
         verts = verts.reshape(-1, 3)
         colors = colors.reshape(-1, 3)
+        ixs = ixs.reshape(-1, 1)
+        iys = iys.reshape(-1, 1)
 
-        mins = np.amin(verts, axis=0)  # get minimum of x, y, z
-        verts = verts + abs(mins)  # shift points to positive grid
-        maxs = np.amax(verts, axis=0)  # get maximum of x, y, z
-
-        width_factor = 600 / maxs[0]  # target image width / max value of x
-        verts = verts * width_factor  # scale points to fit in width
-        maxs = np.amax(verts, axis=0)  # new maximum values
-
-        width = int(np.ceil(maxs[0])) + 1  # image map width equals max x value + 1
-        height = int(np.ceil(maxs[1])) + 1  # image map height equals max y value + 1
-
-        verts = np.hstack([verts, colors])
-        self.image_map = np.zeros((height, width, 3), np.uint8)
+        verts = np.hstack([verts, colors, ixs, iys])
 
         for i, point in enumerate(verts):
-            original_values = {'x': point[0], 'y': point[1], 'z': point[2]}
             x = point[0]
-            y = abs(point[1] - (height - 1))  # y's flipped for image
-            Ix = max(0, min(width - 1, int(x)))
-            Iy = max(0, min(height - 1, int(y)))
+            y = point[1]
+            z = point[2]
+            r = int(point[3])
+            g = int(point[4])
+            b = int(point[5])
+            Ix = int(point[6])
+            Iy = int(point[7])
 
-            r = point[3]
-            g = point[4]
-            b = point[5]
-            self.image_map[Iy, Ix] = (b, g, r)
-
-            if Ix not in self.image_map_points:
-                self.image_map_points[Ix] = {Iy: original_values}
-            elif Iy not in self.image_map_points[Ix]:
-                self.image_map_points[Ix][Iy] = original_values
-            else:
-                del self.image_map_points[Ix][Iy]
-                self.image_map_points[Ix][Iy] = original_values
+            self.image_map_points[Ix][Iy] = {
+                "x": x,
+                "y": y,
+                "z": z,
+                "r": r,
+                "g": g,
+                "b": b
+            }
 
     def calculate_distance(self, ix1, iy1, ix2, iy2):
         pt1 = self.image_map[ix1][iy1]
@@ -140,19 +138,12 @@ class Stereograph:
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Calculate stereograph measurements.")
+    ap = argparse.ArgumentParser(description="Calculate and return json stereograph 3d reconstruction map.")
     ap.add_argument("image_left_path", help="path for image left")
     ap.add_argument("image_right_path", help="path for image right")
-    ap.add_argument("ref_length", help="reference length")
-    ap.add_argument("ref_length_point1", help="first point of reference length 'x,y'")
-    ap.add_argument("ref_length_point2", help="second point of reference length 'x,y'")
-    ap.add_argument("measure_point1", help="first point of measurement 'x,y'")
-    ap.add_argument("measure_point2", help="second point of measurement 'x,y'")
     args = vars(ap.parse_args())
 
     stereo = Stereograph(args["image_left_path"], args["image_right_path"])
 
-    print(json.dumps({"from": args["measure_point1"],
-                      "to": args["measure_point2"],
-                      "distance": 15.234  # placeholder
-                      }))
+    stereo.generate_3d_points()
+    print(json.dumps(stereo.image_map_points))
