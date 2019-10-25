@@ -6,10 +6,6 @@ const canvasRight = document.getElementById('imageRightCanvas');
 const errorLog = document.getElementById('error_message');
 const resizeWidth = 640;
 
-
-console.log(canvasLeft.height);
-console.log(canvasLeft.width);
-
 // Get canvas contexts
 const contextLeft = canvasLeft.getContext('2d');
 const contextRight = canvasRight.getContext('2d');

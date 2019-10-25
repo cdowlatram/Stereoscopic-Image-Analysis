@@ -18,6 +18,6 @@ span {
   margin: 15px;
 }
 
-/* body {
-  background-color: black;
-} */
+span > input {
+  margin: 15px;
+}

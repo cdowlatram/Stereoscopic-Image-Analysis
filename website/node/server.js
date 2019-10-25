@@ -33,10 +33,10 @@ app.get('/css/:file', (req, res) => {
 	res.sendFile(root_path + '/css/' + req.params['file']);
 });
 
-// Serve NCA Logo
-app.get('/images/:file', (req, res) => {
-	res.sendFile(root_path + '/images/' + req.params['file']);
-});
+// // Serve NCA Logo
+// app.get('/images/:file', (req, res) => {
+// 	res.sendFile(root_path + '/images/' + req.params['file']);
+// });
 
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
@@ -56,7 +56,7 @@ app.post('/focal_length', (req, res) => {
 					}
 				});
 			}
-			// fs.unlinkSync(root_path + '/temp/' + image.name);
+			fs.unlinkSync(root_path + '/temp/' + image.name);
 		});
 	} else {
 		res.status(400).send('Bad file type, must be .jpg or .png');
@@ -74,7 +74,7 @@ app.post('/valid_points', (req, res) => {
 					console.log(err);
 					res.status(400).send('Server error');
 				} else {
-					exec(root_path + '/python/valid_points.py ' + root_path + '/temp/' + image.name, (err, stdout, stderr) => {
+					exec(root_path + '/python/stereo_measurements/valid_points.py ' + root_path + '/temp/' + image.name, (err, stdout, stderr) => {
 						if(err || stderr) {
 							res.status(400).send('Error determining valid points');
 						} else {
