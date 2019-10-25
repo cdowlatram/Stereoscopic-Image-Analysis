@@ -1,12 +1,12 @@
 # Usage example
 
-Input: left_image_path, right_image_path
+## valid_points.py
+Input: left_image_path, right_image_path, focal_length_mm, sensor_width_mm
 Output: 2D JSON Array
-            - first index = Image x point
-            - second index = Image y point
-            - entry = x, y, z (in unscaled world space), and r, g, b
+            - isValid = True/False, if true points returned are valid else returned points invalid
+            - points = array of x,y points that are valid/invalid
 
 ```
-python3 stereo_matcher_model.py [imgLeft_path] [imgRight_path]
-python3 stereo_matcher_model.py sample_images/sample1L.jpg sample_images/sample1R.jpg
+python3 valid_points.py [left_image_path] [right_image_path] [focal_length_mm] [sensor_width_mm]
+python3 valid_points.py sample_images/sample1L.jpg sample_images/sample1R.jpg 100, 80
 ```
