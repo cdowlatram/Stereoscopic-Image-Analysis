@@ -3,6 +3,7 @@ const imageLeft = document.getElementById('imageLeft');
 const imageRight = document.getElementById('imageRight');
 const canvasLeft = document.getElementById('imageLeftCanvas');
 const canvasRight = document.getElementById('imageRightCanvas');
+const errorLog = document.getElementById('error_message');
 
 // Get canvas contexts
 const contextLeft = canvasLeft.getContext('2d');
@@ -16,25 +17,25 @@ let imageDataLeft = null;
 let imageDataRight = null;
 
 // Add event listeners to image inputs to display them
-imageLeft.addEventListener('change', function(event){
+imageLeft.addEventListener('change', function(event) {
 	displayImage(event, 0);
 });
-imageRight.addEventListener('change', function(event){
+imageRight.addEventListener('change', function(event) {
 	displayImage(event, 1);
 });
 
 // Add event listeners to canvases to add points
-canvasLeft.addEventListener('click', function(event){
+canvasLeft.addEventListener('click', function(event) {
 	let coord = canvasLeft.getBoundingClientRect();
 	setPoints(event.clientX - coord.left, event.clientY - coord.top, 0);
 });
-canvasRight.addEventListener('click', function(event){
+canvasRight.addEventListener('click', function(event) {
 	let coord = canvasRight.getBoundingClientRect();
 	setPoints(event.clientX - coord.left, event.clientY - coord.top, 1);
 });
 
 // Sets the selected points
-function setPoints(x, y, side){
+function setPoints(x, y, side) {
 	if(side !== activeSide){
 		savedPoints = [[-1, -1], [-1,-1]];
 		renderImage(activeSide);
@@ -47,7 +48,7 @@ function setPoints(x, y, side){
 }
 
 // Renders the point(s) on canvas
-function renderPoints(){
+function renderPoints() {
 	
 	let context = activeSide ? contextRight : contextLeft;
 	renderImage(activeSide);
@@ -66,7 +67,7 @@ function renderPoints(){
 }
 
 // Renders an image on given canvas
-function renderImage(side){
+function renderImage(side) {
 	let canvas = side ? canvasRight : canvasLeft;
 	let context = side ? contextRight : contextLeft;
 	let imageData = side ? imageDataRight : imageDataLeft;
@@ -76,12 +77,12 @@ function renderImage(side){
 }
 
 // Displays an image on its canvas
-function displayImage(e, side){
+function displayImage(e, side) {
 	
 	let reader = new FileReader();
-	reader.onload = function(event){
+	reader.onload = function(event) {
 		let img = new Image();
-		img.onload = function(){
+		img.onload = function() {
 			if(side === 0){
 				imageDataLeft = img;
 			} else {
