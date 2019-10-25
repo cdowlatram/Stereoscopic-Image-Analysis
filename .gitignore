@@ -3,5 +3,6 @@ website/temp/*
 # website/node/config.js
 __pycache__/
 */venv/
-.vscode
 notes
+.*
+!/.gitignore
