@@ -4,6 +4,10 @@ const imageRight = document.getElementById('imageRight');
 const canvasLeft = document.getElementById('imageLeftCanvas');
 const canvasRight = document.getElementById('imageRightCanvas');
 
+
+console.log(canvasLeft.height);
+console.log(canvasLeft.width);
+
 // Get canvas contexts
 const contextLeft = canvasLeft.getContext('2d');
 const contextRight = canvasRight.getContext('2d');
@@ -72,7 +76,8 @@ function renderImage(side){
 	let imageData = side ? imageDataRight : imageDataLeft;
 	canvas.width = imageData.width;
 	canvas.height = imageData.height;
-	context.drawImage(imageData,0,0);
+	//console.log(canvas);
+	context.drawImage(imageData,0,0, canvas.width, canvas.height);
 }
 
 // Displays an image on its canvas
