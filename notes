@@ -1,3 +1,0 @@
-	- install nodist, node version manager, and install latest version of node
-	- ensure that all dependencies are met
-	- look into canvas elements, how to render images onto the screen
