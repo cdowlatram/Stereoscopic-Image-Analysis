@@ -1,7 +1,23 @@
 canvas {
-    display: inline-block
+    display: inline-block;
   }
 
 header > h2 {
-    text-align: center;
+    text-align: left;
   }
+
+.container {
+  margin: auto;
+}
+
+.canvases {
+  margin: 15px;
+}
+
+span {
+  margin: 15px;
+}
+
+/* body {
+  background-color: black;
+} */
