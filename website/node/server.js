@@ -56,7 +56,8 @@ app.post('/focal_length', (req, res) => {
 					}
 				});
 			}
-			fs.unlinkSync(root_path + '/temp/' + image.name);
+			// This is buggy, I will fix later
+			// fs.unlinkSync(root_path + '/temp/' + image.name);
 		});
 	} else {
 		res.status(400).send('Bad file type, must be .jpg or .png');
