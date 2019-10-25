@@ -28,6 +28,11 @@ app.get('/js/:file', (req, res) => {
 	res.sendFile(root_path + '/js/' + req.params['file']);
 });
 
+// Serve CSS
+app.get('/css/:file', (req, res) => {
+	res.sendFile(root_path + '/css/' + req.params['file']);
+});
+
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
 	let image = req.files.file;
