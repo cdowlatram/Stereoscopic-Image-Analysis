@@ -4,6 +4,7 @@ const imageRight = document.getElementById('imageRight');
 const canvasLeft = document.getElementById('imageLeftCanvas');
 const canvasRight = document.getElementById('imageRightCanvas');
 const errorLog = document.getElementById('error_message');
+const resizeWidth = 640;
 
 
 console.log(canvasLeft.height);
@@ -75,8 +76,9 @@ function renderImage(side) {
 	let canvas = side ? canvasRight : canvasLeft;
 	let context = side ? contextRight : contextLeft;
 	let imageData = side ? imageDataRight : imageDataLeft;
-	canvas.width = imageData.width;
-	canvas.height = imageData.height;
+	let aspectRatio = resizeWidth / imageData.width;
+	canvas.width = imageData.width * aspectRatio;
+	canvas.height = imageData.height * aspectRatio;
 	//console.log(canvas);
 	context.drawImage(imageData,0,0, canvas.width, canvas.height);
 }

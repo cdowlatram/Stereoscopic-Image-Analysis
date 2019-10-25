@@ -1,4 +1,7 @@
 website/node/node_modules/*
+website/temp/*
 # website/node/config.js
 __pycache__/
 */venv/
+.vscode
+notes
