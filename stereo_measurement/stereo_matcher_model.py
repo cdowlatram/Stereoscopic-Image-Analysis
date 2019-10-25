@@ -62,8 +62,8 @@ class Stereograph:
 
         self.disparity = self.stereo.compute(self.imgL, self.imgR).astype(np.float32) / 16.0
 
-    def show_disparity(self, title):
-        cv.imshow(title, (self.disparity - self.min_disp) / self.num_disp)
+    def get_disparity(self):
+        return (self.disparity - self.min_disp) / self.num_disp
 
     def set_3d_points(self):
         h, w = self.imgL.shape[:2]
@@ -133,6 +133,8 @@ class Stereograph:
 
             self.image_map_points["is_valid"] = False
 
+        self.image_map_points["points"] = list()
+
         verts = verts.reshape(-1, 3)
         ixs = ixs.reshape(-1, 1)
         iys = iys.reshape(-1, 1)
@@ -152,13 +154,7 @@ class Stereograph:
                 "z": z,
             }
 
-            if Ix not in self.image_map_points:
-                self.image_map_points[Ix] = {Iy: values}
-            elif Iy not in self.image_map_points[Ix]:
-                self.image_map_points[Ix][Iy] = values
-            else:
-                del self.image_map_points[Ix][Iy]
-                self.image_map_points[Ix][Iy] = values
+            self.image_map_points["points"].append({ "x": Ix, "y": Iy })
 
         return self.image_map_points
 
@@ -218,12 +214,7 @@ def resize_image(image, target_size):
 
 
 if __name__ == "__main__":
-
-    def get_valid_points():
-        print(json.dumps(stereo.get_pixels_allowed()))
-
     ap = argparse.ArgumentParser(description="Calculate and return json stereograph 3d reconstruction map.")
-    ap.add_argument("mode", help="get_valid_points = Get valid/invalid points in json")
     ap.add_argument("image_left_path", help="path for image left")
     ap.add_argument("image_right_path", help="path for image right")
     ap.add_argument("focal_length_mm", help="focal length of stereograph in mm")
@@ -237,5 +228,5 @@ if __name__ == "__main__":
 
     stereo = Stereograph(imgL, imgR, args["focal_length_mm"], args["sensor_width_mm"])
 
-    if args["mode"] == "get_valid_points":
-        get_valid_points()
+    cv.imshow("Disparity", stereo.get_disparity())
+    cv.waitKey(0)
