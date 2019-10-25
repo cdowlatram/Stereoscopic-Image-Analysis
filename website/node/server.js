@@ -33,6 +33,11 @@ app.get('/css/:file', (req, res) => {
 	res.sendFile(root_path + '/css/' + req.params['file']);
 });
 
+// Serve NCA Logo
+app.get('/images/:file', (req, res) => {
+	res.sendFile(root_path + '/images/' + req.params['file']);
+});
+
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
 	let image = req.files.file;

@@ -8,9 +8,11 @@
 	</head>
 	<body>
 		<header>
-			<h2>Stereoscopic Image Analysis</h2>
+			<h2>Stereoscopic Image Analyzer</h2>
 		</header>
-		<div>
+		<div class="container">
+		<div class="canvases">
+			<h3>Choose the matching left and right stereograms:</h3>
 			<input type="file" id="imageLeft" name="imageLeft" accept=".jpg,.png"/>
 			<input type="file" id="imageRight" name="imageRight" accept=".jpg,.png"/>
 		</div>
@@ -30,6 +32,7 @@
 			Estimated distance between points: <span id="output"></span>
 		</span>
 		<span id="error_message"></span>
+	</div>
 		<script src="js/display.js"></script>
 		<script src="js/focal_predictor.js"></script>
 		<script src="js/distance_estimator.js"></script>
