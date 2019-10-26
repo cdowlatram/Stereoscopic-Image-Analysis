@@ -95,6 +95,54 @@ class Stereograph:
         self.points = cv.reprojectImageTo3D(self.disparity, Q)
         self.colors = cv.cvtColor(self.imgL, cv.COLOR_BGR2RGB)
 
+    def generate_2d_3d_map(self):
+        if self.points.size is 0:
+            self.set_3d_points()
+
+        h, w = self.imgL.shape[:2]
+
+        verts = self.points
+        ixs = np.tile(np.arange(w), (h,1))
+        iys = np.tile(np.arange(h), (w,1)).transpose()
+
+        # Getting only valid points
+        mask = self.disparity > self.disparity.min()
+        verts = verts[mask]
+        ixs = ixs[mask]
+        iys = iys[mask]
+
+        verts = verts.reshape(-1, 3)
+        ixs = ixs.reshape(-1, 1)
+        iys = iys.reshape(-1, 1)
+
+        verts = np.hstack([verts, ixs, iys])
+
+        for i, point in enumerate(verts):
+            x = point[0]
+            y = point[1]
+            z = point[2]
+
+            if not math.isfinite(x) or not math.isfinite(y) or not math.isfinite(z):
+                # Not finite value, skip
+                continue
+
+            Ix = int(point[3])
+            Iy = int(point[4])
+
+            values = {
+                "x": x,
+                "y": y,
+                "z": z,
+            }
+
+            if Ix not in self.image_map_points:
+                self.image_map_points[Ix] = {Iy: values}
+            elif Iy not in self.image_map_points[Ix]:
+                self.image_map_points[Ix][Iy] = values
+            else:
+                del self.image_map_points[Ix][Iy]
+                self.image_map_points[Ix][Iy] = values
+
     # Determines and returns valid points on left image to select for measurement
     def get_valid_points(self):
         if self.points.size is 0:
@@ -155,12 +203,6 @@ class Stereograph:
             Ix = int(point[3])
             Iy = int(point[4])
 
-            values = {
-                "x": x,
-                "y": y,
-                "z": z,
-            }
-
             valid_points["points"].append({ "x": Ix, "y": Iy })
 
         return valid_points
@@ -188,9 +230,12 @@ class Stereograph:
             np.savetxt(f, verts2, fmt='%f %f %f %d %d %d ')
 
     def calculate_distance(self, ix1, iy1, ix2, iy2):
-        pt1 = self.image_map[ix1][iy1]
-        pt2 = self.image_map[ix2][iy2]
-        distance = math.sqrt((pt1.x-pt2.x)**2 + (pt1.y-pt2.y)**2 + (pt1.z-pt2.z)**2)
+        if not self.image_map_points:
+            self.generate_2d_3d_map()
+
+        pt1 = self.image_map_points[ix1][iy1]
+        pt2 = self.image_map_points[ix2][iy2]
+        distance = math.sqrt((pt1["x"]-pt2["x"])**2 + (pt1["y"]-pt2["y"])**2 + (pt1["z"]-pt2["z"])**2)
         return distance * self.scale
 
     def calculate_set_scale(self, ix1, iy1, ix2, iy2, actual_distance):
