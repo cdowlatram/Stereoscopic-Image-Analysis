@@ -6,6 +6,17 @@ import json
 import cv2 as cv
 import math
 
+ply_header ='''ply
+format ascii 1.0
+element vertex %(vert_num)d
+property float x
+property float y
+property float z
+property uchar red
+property uchar green
+property uchar blue
+end_header
+'''
 
 class Stereograph:
     def __init__(self, left_image, right_image, focal_length_mm, sensor_width_mm):
@@ -84,56 +95,47 @@ class Stereograph:
         self.points = cv.reprojectImageTo3D(self.disparity, Q)
         self.colors = cv.cvtColor(self.imgL, cv.COLOR_BGR2RGB)
 
-    def get_pixels_allowed(self):
+    # Determines and returns valid points on left image to select for measurement
+    def get_valid_points(self):
         if self.points.size is 0:
             self.set_3d_points()
 
         h, w = self.imgL.shape[:2]
 
+        valid_points = {}
         verts = self.points
-        colors = self.colors
 
         # Get image coordinates
         ixs = np.tile(np.arange(w), (h,1))
         iys = np.tile(np.arange(h), (w,1)).transpose()
 
         # Initialize image map
-        self.image_map = np.zeros([h,w,3],dtype=np.uint8)
+        # self.image_map = np.zeros([h,w,3],dtype=np.uint8)
         # self.image_map.fill(255)  # white image
 
         # Determine if there a more dead pixels or live pixels
-        total_original_points = self.points.size
-
         # Getting only valid points
         valid_disp_mask = self.disparity > self.disparity.min()
-        lverts = self.points[valid_disp_mask]
+        live_verts = self.points[valid_disp_mask]
 
-        if total_original_points/2 >= lverts.size:
+        if self.points.size/2 >= live_verts.size:
             # Send back live points
-
-            colors = colors[valid_disp_mask]
             ixs = ixs[valid_disp_mask]
             iys = iys[valid_disp_mask]
+            verts = live_verts
 
-            remove_inf_nan = np.isfinite(lverts)
-            ixs = ixs[remove_inf_nan]
-            iys = iys[remove_inf_nan]
-            verts = lverts[remove_inf_nan]
-
-            self.image_map_points["is_valid"] = True
+            valid_points["is_valid"] = True
         else:
             # Send back dead points
-
             invalid_disp_mask = self.disparity <= self.disparity.min()
-            dverts = self.points[invalid_disp_mask]
-
+            dead_verts = self.points[invalid_disp_mask]
             ixs = ixs[invalid_disp_mask]
             iys = iys[invalid_disp_mask]
-            verts = dverts
+            verts = dead_verts
 
-            self.image_map_points["is_valid"] = False
+            valid_points["is_valid"] = False
 
-        self.image_map_points["points"] = list()
+        valid_points["points"] = list()
 
         verts = verts.reshape(-1, 3)
         ixs = ixs.reshape(-1, 1)
@@ -145,6 +147,11 @@ class Stereograph:
             x = point[0]
             y = point[1]
             z = point[2]
+
+            if valid_points["is_valid"] and (not math.isfinite(x) or not math.isfinite(y) or not math.isfinite(z)):
+                # Not finite value, skip
+                continue
+
             Ix = int(point[3])
             Iy = int(point[4])
 
@@ -154,22 +161,11 @@ class Stereograph:
                 "z": z,
             }
 
-            self.image_map_points["points"].append({ "x": Ix, "y": Iy })
+            valid_points["points"].append({ "x": Ix, "y": Iy })
 
-        return self.image_map_points
+        return valid_points
 
     def write_ply(self, filename):
-        ply_header ='''ply
-format ascii 1.0
-element vertex %(vert_num)d
-property float x
-property float y
-property float z
-property uchar red
-property uchar green
-property uchar blue
-end_header
-'''
         if self.points.size is 0:
             self.set_3d_points()
 
