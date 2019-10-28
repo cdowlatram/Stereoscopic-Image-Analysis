@@ -47,7 +47,7 @@ app.post('/focal_length', (req, res) => {
 				console.log(err);
 				res.status(400).send('Server error');
 			} else {
-				exec(root_path + '/python/focal_predictor.py ' + root_path + '/temp/' + image.name, (err, stdout, stderr) => {
+				exec('python ' + root_path + '/python/focal_predictor.py ' + root_path + '/temp/' + image.name, (err, stdout, stderr) => {
 					if(err || stderr) {
 						if(err) console.log(err);
 						if(stderr) console.log(stderr);
@@ -84,7 +84,7 @@ app.post('/valid_points', (req, res) => {
 							res.status(400).send('Server error');
 							fs.unlinkSync(root_path + '/temp/' + image_left.name);
 						} else {
-							exec(root_path + '/python/valid_points.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString(), {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
+							exec('python ' + root_path + '/python/valid_points.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString(), {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 								if(err || stderr) {
 									if(err) console.log(err);
 									if(stderr) console.log(stderr);
@@ -132,7 +132,7 @@ app.post('/estimate_distance', (req, res) => {
 							res.status(400).send('Server error');
 							fs.unlinkSync(root_path + '/temp/' + image_left.name);
 						} else {
-							exec(root_path + '/python/predict_length.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString(), (err, stdout, stderr) => {
+							exec('python ' + root_path + '/python/predict_length.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString(), (err, stdout, stderr) => {
 								if(err || stderr) {
 									if(err) console.log(err);
 									if(stderr) console.log(stderr);
