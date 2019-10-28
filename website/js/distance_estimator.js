@@ -1,19 +1,24 @@
 function getValidPoints() {
-	let image = imageLeft.files[0];
+	let image_left = imageLeft.files[0];
+	let image_right = imageRight.files[0];
 	let focal_length = focal_length_field.value;
+	let sensor_width = sensor_width_field.value;
 	
 	// Do local data validation
 	
 	let form = new FormData();
-	form.append('file', image);
+	form.append('file_left', image_left);
+	form.append('file_right', image_right);
 	form.append('focal_length', focal_length);
+	form.append('sensor_width', sensor_width);
 	
 	let request = new XMLHttpRequest();
+	request.responseType = 'json';
 	request.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200) {
-				// Display new image, set up points check
-				console.log(this.responseText);
+				errorLog.innerHTML = '';
+				renderValidPoints(this.response["is_valid"], this.response["points"]);
 			} else {
 				errorLog.innerHTML = this.responseText;
 			}
@@ -43,6 +48,7 @@ function estimateDistance() {
 	request.onreadystatechange = function() {
 		if(this.readyState == 4) { 
 			if(this.status == 200) {
+				errorLog.innerHTML = '';
 				output_field.innerHTML = this.responseText;
 			} else {
 				errorLog.innerHTML = this.responseText;
@@ -53,6 +59,7 @@ function estimateDistance() {
 	request.send(form);
 }
 
+const sensor_width_field = document.getElementById('sensorWidth');
 const output_field = document.getElementById('output');
 
 const valid_button = document.getElementById('getPoints');

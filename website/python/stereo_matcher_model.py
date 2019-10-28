@@ -203,7 +203,7 @@ class Stereograph:
             Ix = int(point[3])
             Iy = int(point[4])
 
-            valid_points["points"].append({ "x": Ix, "y": Iy })
+            valid_points["points"].append((Ix, Iy))
 
         return valid_points
 

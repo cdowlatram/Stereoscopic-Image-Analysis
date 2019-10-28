@@ -21,16 +21,43 @@
 			<canvas id="imageRightCanvas" width="0" height="0"></canvas>
 		</div>	
 		
-		<span>
-			<input type="number" id="focalLength" name="focalLength" min="0" max="300" step="1" value="0"/>
-			mm
-			<input type="button" id="focalLengthPredict" name="focalLengthPredict" value="Predict Focal Length"/>
-			<input type="button" id="getPoints" name="getPoints" value="Get Valid Points"/>
-			<input type="button" id="distanceEstimate" name="distanceEstimate" value="Estimate Distance"/>
-		</span>
-		<span>
-			Estimated distance between points: <span id="output"></span>
-		</span>
+		<div>
+			<span>
+				Focal Length:
+				<input type="number" id="focalLength" name="focalLength" min="0" max="300" step="1" value="0"/>
+				mm
+				<input type="button" id="focalLengthPredict" name="focalLengthPredict" value="Predict Focal Length"/>
+				
+			</span>
+		</div>
+		<div>
+			<span>
+				Sensor Width:
+				<input type="number" id="sensorWidth" name="sensorWidth" min="0" max="300" step="1" value="0"/>
+				mm
+				<input type="button" id="getPoints" name="getPoints" value="Get Valid Points"/>
+			</span>
+		</div>
+		<div>
+			<span>
+				<input type="checkbox" id="selectMode"/>
+				Point selection mode:
+				<span id="selectModeIndicator">Reference</span>
+			</span>
+		</div>
+		<div>
+			<span>
+				Reference Measurement Length:
+				<input type="number" id="referenceLength" name="referenceLength" min="0" max="300" step="1" value="0"/>
+				mm
+			</span>
+		</div>
+		<div>
+			<span>
+				<input type="button" id="distanceEstimate" name="distanceEstimate" value="Estimate Distance"/>
+				Estimated distance between points: <span id="output"></span>
+			</span>
+		</div>
 		<span id="error_message"></span>
 	</div>
 		<script src="js/display.js"></script>

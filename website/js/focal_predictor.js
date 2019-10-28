@@ -10,6 +10,7 @@ function getFocalLength() {
 	request.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200) {
+				errorLog.innerHTML = '';
 				focal_length_field.value = Number(this.responseText);
 			} else {
 				errorLog.innerHTML = this.responseText;
