@@ -233,7 +233,6 @@ class Stereograph:
         if not self.image_map_points:
             self.generate_2d_3d_map()
 
-        import pdb; pdb.set_trace()
         pt1 = self.image_map_points[ix1][iy1]
         pt2 = self.image_map_points[ix2][iy2]
         distance = math.sqrt((pt1["x"]-pt2["x"])**2 + (pt1["y"]-pt2["y"])**2 + (pt1["z"]-pt2["z"])**2)
