@@ -33,14 +33,14 @@ app.get('/css/:file', (req, res) => {
 	res.sendFile(root_path + '/css/' + req.params['file']);
 });
 
-// // Serve NCA Logo
-// app.get('/images/:file', (req, res) => {
-// 	res.sendFile(root_path + '/images/' + req.params['file']);
-// });
+// Serve images
+app.get('/images/:file', (req, res) => {
+	res.sendFile(root_path + '/images/' + req.params['file']);
+});
 
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
-	let image = req.files.file;
+	let image = req.files.image;
 	if(image.mimetype.localeCompare('image/png') === 0 || image.mimetype.localeCompare('image/jpeg') === 0) {
 		image.mv(root_path + '/temp/' + image.name, function(err) {
 			if(err) {
@@ -67,8 +67,8 @@ app.post('/focal_length', (req, res) => {
 // Get valid input points
 app.post('/valid_points', (req, res) => {
 	// TODO: granulate error messages
-	let image_left = req.files.file_left;
-	let image_right = req.files.file_right;
+	let image_left = req.files.image_left;
+	let image_right = req.files.image_right;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
 	if((image_left.mimetype.localeCompare('image/png') === 0 || image_left.mimetype.localeCompare('image/jpeg') === 0) && (image_right.mimetype.localeCompare('image/png') === 0 || image_right.mimetype.localeCompare('image/jpeg') === 0)) {
@@ -111,16 +111,16 @@ app.post('/valid_points', (req, res) => {
 // Estimate distance
 app.post('/estimate_distance', (req, res) => {
 	// TODO: granulate error messages
-	let image_left = req.files.file_left;
-	let image_right = req.files.file_right;
+	let image_left = req.files.image_left;
+	let image_right = req.files.image_right;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
-	let reference_points = JSON.parse(req.body.reference_points);
+	let reference_points = pointParser(req.body.reference_points);
 	let reference_length = Number(req.body.reference_length);
-	let measurement_points = JSON.parse(req.body.measurement_points);
+	let measurement_points = pointParser(req.body.measurement_points);
 	if((image_left.mimetype.localeCompare('image/png') === 0 || image_left.mimetype.localeCompare('image/jpeg') === 0) && (image_right.mimetype.localeCompare('image/png') === 0 || image_right.mimetype.localeCompare('image/jpeg') === 0)) {
 		if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) && ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
-			// TODO: add more value checks
+			// TODO: add more value validation checks
 			image_left.mv(root_path + '/temp/' + image_left.name, function(err) {
 				if(err) {
 					console.log(err);
@@ -132,7 +132,7 @@ app.post('/estimate_distance', (req, res) => {
 							res.status(400).send('Server error');
 							fs.unlinkSync(root_path + '/temp/' + image_left.name);
 						} else {
-							exec(root_path + '/python/valid_points.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString(), (err, stdout, stderr) => {
+							exec(root_path + '/python/predict_length.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString(), (err, stdout, stderr) => {
 								if(err || stderr) {
 									if(err) console.log(err);
 									if(stderr) console.log(stderr);
@@ -155,6 +155,11 @@ app.post('/estimate_distance', (req, res) => {
 		res.status(400).send('Bad file type, must be .jpg or .png');
 	}
 });
+
+function pointParser(input_string) {
+	let array = input_string.split(',');
+	return [[Number(array[0]),Number(array[1])],[Number(array[2]),Number(array[3])]];
+}
 
 // Initializes server
 app.listen(config.port, () => {

@@ -14,6 +14,6 @@ try:
 	print(json.dumps(stereo.get_valid_points()))
 	sys.stdout.flush()
 except Exception as e:
-	sys.stderr.write("Error encountered")
-	print(e)
+	sys.stderr.write("Error encountered\n")
+	sys.stderr.write(repr(e))
 	sys.stderr.flush()
