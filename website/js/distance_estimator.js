@@ -3,7 +3,10 @@ function getValidPoints() {
 	let image_right = imageRight.files[0];
 	let focal_length = focal_length_field.value;
 	let sensor_width = sensor_width_field.value;
-	
+	let min_disparity = min_disparity_field.value;
+	let num_disparity = num_disparity_field.value;
+	let window_size = window_size_field.value;
+
 	// TODO: Do local data validation
 	
 	loading_vp.hidden = false;
@@ -13,6 +16,9 @@ function getValidPoints() {
 	form.append('image_right', image_right);
 	form.append('focal_length', focal_length);
 	form.append('sensor_width', sensor_width);
+	form.append('min_disparity', min_disparity);
+	form.append('num_disparity', num_disparity);
+	form.append('window_size', window_size);
 	
 	let request = new XMLHttpRequest();
 	request.responseType = 'json';

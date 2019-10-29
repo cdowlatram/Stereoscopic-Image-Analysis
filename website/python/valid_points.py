@@ -11,6 +11,7 @@ try:
 	imgL = smm.resize_image(imgL, 640)
 	imgR = smm.resize_image(imgR, 640)
 	stereo = smm.Stereograph(imgL, imgR, sys.argv[3], sys.argv[4])
+	stereo.update_settings(int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7]))
 	print(json.dumps(stereo.get_valid_points()))
 	sys.stdout.flush()
 except Exception as e:
