@@ -101,9 +101,9 @@ function renderPoints() {
 function initArray(width, height, value) {
 	let i, j;
 	let array = [];
-	for(i=0; i<height; i++) {
+	for(i=0; i<width; i++) {
 		array[i] = [];
-		for(j=0; j<width; j++) {
+		for(j=0; j<height; j++) {
 			array[i][j] = value;
 		}
 	}
