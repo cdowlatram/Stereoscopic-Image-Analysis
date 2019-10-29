@@ -101,9 +101,9 @@ function renderPoints() {
 function initArray(width, height, value) {
 	let i, j;
 	let array = [];
-	for(i=0; i<height; i++) {
+	for(i=0; i<width; i++) {
 		array[i] = [];
-		for(j=0; j<width; j++) {
+		for(j=0; j<height; j++) {
 			array[i][j] = value;
 		}
 	}
@@ -115,8 +115,15 @@ function calculateValidPoints(mode, points) {
 	let i, j;
 	validPointsArray = initArray(resizeWidth, imageHeight, !mode);
 	for(i=0; i < points.length; i++) {
+		try {
+			validPointsArray[points[i][0]][points[i][1]] = mode;
+		}
+		catch(err) {
+			console.log("Value of i = ");
+			console.log(i);
+		}
 		// Points dont have to be mapped here since image is resized to width 640 during point extraction, if that changes this code will need to change
-		validPointsArray[points[i][0]][points[i][1]] = mode;
+		
 	}
 	validPointsRecieved = true;
 	renderValidPoints();
@@ -129,7 +136,13 @@ function renderValidPoints() {
 	context.fillStyle = "black";
 	for(i=0; i<resizeWidth; i++) {
 		for(j=0; j<imageHeight; j++) {
-			if(!validPointsArray[i][j]) context.fillRect(i, j, 1, 1);
+			try {
+				if(!validPointsArray[i][j]) context.fillRect(i, j, 1, 1);
+			}
+			catch(err) {
+				console.log("i = ", i);
+				console.log("j = ", j);
+			}
 		}
 	}
 	context.fill();
