@@ -118,6 +118,9 @@ app.post('/estimate_distance', (req, res) => {
 	let reference_points = pointParser(req.body.reference_points);
 	let reference_length = Number(req.body.reference_length);
 	let measurement_points = pointParser(req.body.measurement_points);
+	let min_disparity = Number(req.body.min_disparity);
+	let num_disparity = Number(req.body.num_disparity);
+	let window_size = Number(req.body.window_size);
 	if((image_left.mimetype.localeCompare('image/png') === 0 || image_left.mimetype.localeCompare('image/jpeg') === 0) && (image_right.mimetype.localeCompare('image/png') === 0 || image_right.mimetype.localeCompare('image/jpeg') === 0)) {
 		if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) && ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
 			// TODO: add more value validation checks
@@ -132,7 +135,7 @@ app.post('/estimate_distance', (req, res) => {
 							res.status(400).send('Server error');
 							fs.unlinkSync(root_path + '/temp/' + image_left.name);
 						} else {
-							exec('python ' + root_path + '/python/predict_length.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString(), (err, stdout, stderr) => {
+							exec('python ' + root_path + '/python/predict_length.py ' + root_path + '/temp/' + image_left.name + ' ' + root_path + '/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString(), (err, stdout, stderr) => {
 								if(err || stderr) {
 									if(err) console.log(err);
 									if(stderr) console.log(stderr);
