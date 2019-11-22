@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import StereoImage from './components/StereoImage';
 import CameraSettings from './components/CameraSettings';
+import DisparitySettings from './components/DisparitySettings';
 import './App.css';
 
 class App extends Component {
@@ -12,18 +13,55 @@ class App extends Component {
       imageRight: '',
       focalLength: '',
       sensorWidth: '',
-      minDisparities: 1,
-      numDisparities: 80,
-      referencePt1: {x: 0, y: 0},
-      referencePt2: {x: 500, y: 500},
+      minDisparity: 1,
+      numDisparity: 80,
+      referencePt1: '',
+      referencePt2: '',
       referenceLength: '',
       measurePt1: '',
       measurePt2: '',
       estimatedDistance: '',
-      canvasMode: 'reference',
+      canvasMode: 'view',
+      image_width: '',
+      image_height: '',
       validPoints: {},
       currentStep: 1,
+      errorLog: '',
     };
+  }
+
+  handleOnclickBack = () => {
+    const back = this.state.currentStep - 1
+    const step = Math.max(1, back)
+    this.setState({
+      currentStep: step,
+      canvasMode: 'view'
+    });
+
+    if(step === 4)
+      this.setState({canvasMode: 'reference'});
+    if(step === 5)
+      this.setState({canvasMode: 'measure'});
+  }
+
+  handleOnclickNext = () => {
+    const next = this.state.currentStep + 1
+    const step = Math.min(6, next)
+    this.setState({currentStep: step});
+    if(step === 4)
+      this.setState({canvasMode: 'reference'});
+    if(step === 5)
+      this.setState({canvasMode: 'measure'});
+  }
+
+  handleChange = (name, value) => {
+    this.setState({[name]: value});
+  }
+
+  onChangeHandler = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
   setPoint = (point, x, y) => {
@@ -41,25 +79,13 @@ class App extends Component {
     }
   }
 
-  handleOnclickBack = () => {
-    const back = this.state.currentStep - 1
-    const step = Math.max(1, back)
-    this.setState({currentStep: step});
-  }
-
-  handleOnclickNext = () => {
-    const next = this.state.currentStep + 1
-    this.setState({currentStep: next});
-  }
-
-  handleChange = (name, value) => {
-    this.setState({[name]: value});
-  }
-
-  onChangeHandler = event => {
+  setValidPoints = (is_valid, points) => {
     this.setState({
-      [event.target.name]: event.target.value
-    });
+      validPoints: {
+        is_valid: is_valid,
+        points: points
+      }
+    })
   }
 
   render() {
@@ -87,7 +113,6 @@ class App extends Component {
         </header>
         <div className="Main d-flex justify-content-between">
           <div className="image-panel col d-flex justify-content-center">
-            {/* Step  1*/}
             <div>
               <TransitionGroup component={null}>
                 {isStep1 && imagesUploaded && (
@@ -117,6 +142,7 @@ class App extends Component {
                   onImageChange={this.handleChange}
                   canvasMode={this.state.canvasMode}
                   points={points}
+                  validPoints={this.state.validPoints}
                   setPoint={this.setPoint}
                 />
 
@@ -130,6 +156,10 @@ class App extends Component {
                           labelText="Click to Upload Right Image"
                           resizeWidth="540"
                           onImageChange={this.handleChange}
+                          canvasMode="right_image"
+                          points={points}
+                          validPoints={this.state.validPoints}
+                          setPoint={this.setPoint}
                         />
                       </div>
                     </CSSTransition>
@@ -186,6 +216,7 @@ class App extends Component {
 
                       <h2 className="mb-4">Camera Settings</h2>
                       <CameraSettings 
+                        image={this.state.imageLeft}
                         focalLength={this.state.focalLength} 
                         sensorWidth={this.state.sensorWidth} 
                         onSettingsChange={this.handleChange}
@@ -207,31 +238,21 @@ class App extends Component {
                         <button type="button" className="btn btn-link" onClick={this.handleOnclickBack}>Back</button>
                       </div>
 
-                      <label htmlFor="numDisparities">Number of Disparities</label>
-                      <div className="input-group mb-3">
-                        <input type="text" 
-                          id="numDisparities" 
-                          name="numDisparities" 
-                          className="form-control" 
-                          onChange={this.onChangeHandler}
-                          value={this.props.numDisparities}/>
-                      </div>
-
-                      <hr/>
-
-                      <label htmlFor="minDisparities">Minimum Disparities</label>
-                      <div className="input-group mb-3">
-                        <input type="text" 
-                          id="minDisparities" 
-                          name="minDisparities" 
-                          className="form-control" 
-                          onChange={this.onChangeHandler}
-                          value={this.props.minDisparities}/>
-                      </div>
-
-                      <div className="text-right mt-5">
-                        <button type="button" className="btn btn-primary" onClick={this.handleOnclickNext}>Continue &rsaquo;</button>
-                      </div>
+                      <DisparitySettings 
+                        imageLeft={this.state.imageLeft}
+                        imageRight={this.state.imageRight}
+                        focalLength={this.state.focalLength}
+                        sensorWidth={this.state.sensorWidth}
+                        minDisparity={this.state.minDisparity}
+                        numDisparity={this.state.numDisparity}
+                        currentStep={this.state.currentStep}
+                        imageWidth={this.image_width}
+                        imageHeight={this.image_height}
+                        validPoints={this.state.validPoints}
+                        setValidPoints={this.setValidPoints}
+                        onSettingsChange={this.handleChange}
+                        errorLog={this.errorLog}
+                      />
                     </div>
                   </CSSTransition>
                 }

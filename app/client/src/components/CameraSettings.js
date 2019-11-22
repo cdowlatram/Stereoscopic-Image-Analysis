@@ -7,9 +7,32 @@ class CameraSettings extends Component {
   }
 
   predictFocal() {
-    fetch("http://localhost:9000/testAPI")
-      .then(res => res.text())
-      .then(res => this.setState({ focalLength: res }));
+    let image = this.props.image;
+    
+    // TODO: Do local data validation
+    
+    let form = new FormData();
+    form.append('image', image);
+    
+    let request = new XMLHttpRequest();
+    let react = this;
+    request.onreadystatechange = function() {
+      if(this.readyState === 4) {
+        if(this.status === 200) {
+          let event = {target: {}}
+          event.target.name = "focalLength"
+          event.target.value = this.responseText
+          react.changeSetting(event)
+        } else {
+          let event = {target: {}}
+          event.target.name = "errorLog"
+          event.target.value = this.responseText
+          react.changeSetting(event)
+        }
+      }
+    };
+    request.open("POST", "http://localhost:9000/focal_length");
+    request.send(form);
   }
 
   changeSetting = event => {

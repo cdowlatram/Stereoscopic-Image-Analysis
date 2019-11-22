@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class Canvas extends React.Component {  
   constructor(props) {
     super(props);
+    this.updateValue = this.updateValue.bind(this);
     this.setPoint = this.setPoint.bind(this);
   }
 
@@ -14,6 +15,7 @@ class Canvas extends React.Component {
     this.setImage(this.props.file)
   }
 
+  // Renders image and points
   setImage = file => {
     const canvas = this.refs.canvas
     const ctx = canvas.getContext("2d")
@@ -22,44 +24,51 @@ class Canvas extends React.Component {
     reader.onload = event => {
         var img = new Image();
         img.onload = () => {
-            let imageRatio = this.props.width / img.width
-            canvas.width = img.width * imageRatio
-            canvas.height = img.height * imageRatio
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        
+          let imageRatio = this.props.width / img.width
+          canvas.width = img.width * imageRatio
+          canvas.height = img.height * imageRatio
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+          if(this.props.canvasMode !== 'right_image'){
+            this.updateValue('image_width', canvas.width)
+            this.updateValue('image_height', canvas.height)
+
+            this.renderValidPoints(ctx, this.props.validPoints, canvas.width, canvas.height)
+
             let refpt1 = this.props.points.referencePt1,
                 refpt2 = this.props.points.referencePt2,
                 measurept1 = this.props.points.measurePt1,
                 measurept2 = this.props.points.measurePt2
 
-            if(refpt1 !== ''){
-              ctx.fillRect(refpt1.x,refpt1.y,1,1);
-            }
-            if(refpt2 !== ''){
-              ctx.fillRect(refpt2.x,refpt2.y,1,1);
-              ctx.beginPath();
-              ctx.moveTo(refpt1.x, refpt1.y);
-              ctx.lineTo(refpt2.x, refpt2.y);
-              ctx.stroke();
-            }
-
-            if(measurept1 !== ''){
-              ctx.fillRect(measurept1.x,measurept1.y,3,3);
-            }
-            if(measurept2 !== ''){
-              ctx.fillRect(measurept2.x,measurept2.y,3,3);
-              ctx.beginPath();
-              ctx.moveTo(measurept1.x, measurept1.y);
-              ctx.lineTo(measurept2.x, measurept2.y);
-              ctx.stroke();
-            }
+            this.renderPts(ctx, refpt1, refpt2, measurept1, measurept2)
+          }
         }
         img.src = event.target.result
     }
     reader.readAsDataURL(file)
   }
 
+  renderValidPoints = (ctx, validPoints) => {
+    if (validPoints === '') return;
+
+    ctx.fillStyle = "black";
+    for (let i = 0; i < validPoints.length; i++) {
+      for (let j = 0; j < validPoints[i].length; j++) {
+        if(validPoints[i][j] === false) {
+          ctx.fillRect(i,j,1,1);
+        }
+      }
+    }
+  }
+
+  updateValue = (name, value) => {
+    this.props.updateValue(name, value)
+  }
+
+  // Sets points on canvas
   setPoint = event => {
+    if (this.props.canvasMode === 'view') return null
+
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext("2d");
 
@@ -90,14 +99,36 @@ class Canvas extends React.Component {
         this.props.setPoint("measurePt1", x, y)
       }
     }
+  }
 
-    // Renders the point(s) on canvas
-    // renderImage(0);
-    // ctx.beginPath();
-    // ctx.beginPath();
-    // ctx.moveTo(0, 0);
-    // ctx.lineTo(300, 150);
-    // ctx.stroke();
+  renderPts = (ctx, refpt1, refpt2, measurept1, measurept2) => {
+    if(refpt1 !== ''){
+      ctx.fillStyle = "blue";
+      ctx.fillRect(refpt1.x,refpt1.y,1,1);
+    }
+    if(refpt2 !== ''){
+      ctx.fillStyle = "blue";
+      ctx.fillRect(refpt2.x,refpt2.y,1,1);
+      ctx.beginPath();
+      ctx.moveTo(refpt1.x, refpt1.y);
+      ctx.lineTo(refpt2.x, refpt2.y);
+      ctx.strokeStyle = "blue";
+      ctx.stroke();
+    }
+
+    if(measurept1 !== ''){
+      ctx.fillStyle = "red";
+      ctx.fillRect(measurept1.x,measurept1.y,1,1);
+    }
+    if(measurept2 !== ''){
+      ctx.fillStyle = "red";
+      ctx.fillRect(measurept2.x,measurept2.y,1,1);
+      ctx.beginPath();
+      ctx.moveTo(measurept1.x, measurept1.y);
+      ctx.lineTo(measurept2.x, measurept2.y);
+      ctx.strokeStyle = "red";
+      ctx.stroke();
+    }
   }
 
   render() {
@@ -127,6 +158,10 @@ class StereoImage extends Component {
     this.props.onImageChange(this.props.idName, event.target.files[0])
   }
 
+  updateValue = (name, value) => {
+    this.props.onImageChange(name, value)
+  }
+
   onClickHandler = event => {
     this.props.onImageChange(this.props.idName, "")
   }
@@ -146,7 +181,9 @@ class StereoImage extends Component {
             file={this.props.image} 
             canvasMode={this.props.canvasMode} 
             points={this.props.points}
+            validPoints={this.props.validPoints}
             setPoint={this.setPoint}
+            updateValue={this.updateValue}
           /><br/>
           <label onClick={this.onClickHandler} htmlFor={this.props.idName}>Clear Image</label>
         </span>
