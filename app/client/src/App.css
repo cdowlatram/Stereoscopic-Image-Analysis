@@ -1,0 +1,191 @@
+html,
+body,
+#root,
+.App,
+.Main {
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 1rem;
+  color: white;
+  background-color: #1D1F28;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: normal;
+}
+
+hr {
+  border-color: #344050;
+  margin: 45px 0;
+}
+
+
+
+.btn,
+.form-control,
+.input-group-text {
+  border-radius: 1px;
+}
+
+.btn-primary {
+  background-color: #0067EF;
+  border-color: #0067EF;
+}
+
+.btn-secondary {
+  background-color: #344050;
+  border-color: #344050;
+}
+
+.navbar {
+  height: 70px;
+  background-color: #171920;
+  box-shadow: 0px 2px 4px 0px rgba(0,0,0,.5);
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.image-panel {
+  padding: 15px;
+  padding-top: 120px;
+}
+
+.side-panel {
+  width: 610px;
+  padding-top: 120px;
+  background: rgb(23,25,33);
+  background: linear-gradient(90deg, rgba(23,25,33,1) 0%, rgba(14,15,19,1) 100%);
+}
+
+.side-panel__content {
+  width: 403px;
+  position: relative;
+}
+
+.side-panel__entry {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.upload-box {
+  height: 402px;
+  background-color: #171920;
+  box-shadow: 0px 2px 4px 1px rgba(0,0,0,.28);
+}
+
+.canvaspane {
+  display: inline-block;
+}
+
+.parameter-box {
+  background-color: #212533;
+  border: 1px solid #344050;
+  color: #8495AD;
+  font-size: .9rem;
+  padding: 15px 19px;
+}
+
+
+/* Animations */
+.fade-enter {
+  opacity: 0.01;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: all 300ms;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0.01;
+  transition: all 300ms;
+}
+
+
+.slide-enter {
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+}
+
+.slide-enter-active {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+
+.slide-exit {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+}
+
+.slide-exit-active {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+    
+@keyframes slide-in {
+    100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes slide-in {
+    100% { -webkit-transform: translateX(0%); }
+}
+    
+@keyframes slide-out {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(100%); }
+}
+
+@-webkit-keyframes slide-out {
+    0% { -webkit-transform: translateX(0%); }
+    100% { -webkit-transform: translateX(100%); }
+}
+
+.fadeSlide-enter {
+  opacity: 0.01;
+  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+}
+
+.fadeSlide-enter-active {
+  opacity: 1;
+  transition: all 300ms;
+  animation: slide-in 300ms forwards;
+  -webkit-animation: slide-in 300ms forwards;
+}
+
+.fadeSlide-exit {
+  opacity: 1;
+  transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+}
+
+.fadeSlide-exit-active {
+  opacity: 0.01;
+  transition: all 300ms;
+  animation: slide-out 300ms forwards;
+  -webkit-animation: slide-out 300ms forwards;
+}
