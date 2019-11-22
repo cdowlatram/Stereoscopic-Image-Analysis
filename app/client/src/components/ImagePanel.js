@@ -16,6 +16,7 @@ class ImagePanel extends Component {
   }
 
   render() {
+    const imagesUploaded = (this.props.files.imageLeft !== '' && this.props.files.imageLeft !== '')
     return (
       <div className="image-panel col d-flex justify-content-center">
         <div>
