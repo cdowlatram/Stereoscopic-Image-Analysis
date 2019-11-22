@@ -11,6 +11,19 @@ class Canvas extends React.Component {
     this.setImage(this.props.file)
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    let shouldUpdate = false;
+    if (
+      nextProps.file !== this.props.file ||
+      nextProps.validPoints !== this.props.validPoints ||
+      nextProps.points !== this.props.points
+    ) {
+      shouldUpdate = true;
+    }
+
+    return shouldUpdate;
+  }
+
   componentDidUpdate() {
     this.setImage(this.props.file)
   }
@@ -28,20 +41,18 @@ class Canvas extends React.Component {
           canvas.width = img.width * imageRatio
           canvas.height = img.height * imageRatio
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        
+          this.updateValue('image_width', canvas.width)
+          this.updateValue('image_height', canvas.height)
 
-          if(this.props.canvasMode !== 'right_image'){
-            this.updateValue('image_width', canvas.width)
-            this.updateValue('image_height', canvas.height)
+          this.renderValidPoints(ctx, this.props.validPoints, canvas.width, canvas.height)
 
-            this.renderValidPoints(ctx, this.props.validPoints, canvas.width, canvas.height)
+          let refpt1 = this.props.points.referencePt1,
+              refpt2 = this.props.points.referencePt2,
+              measurept1 = this.props.points.measurePt1,
+              measurept2 = this.props.points.measurePt2
 
-            let refpt1 = this.props.points.referencePt1,
-                refpt2 = this.props.points.referencePt2,
-                measurept1 = this.props.points.measurePt1,
-                measurept2 = this.props.points.measurePt2
-
-            this.renderPts(ctx, refpt1, refpt2, measurept1, measurept2)
-          }
+          this.renderPts(ctx, refpt1, refpt2, measurept1, measurept2)
         }
         img.src = event.target.result
     }
@@ -49,7 +60,7 @@ class Canvas extends React.Component {
   }
 
   renderValidPoints = (ctx, validPoints) => {
-    if (validPoints === '') return;
+    if (validPoints === '') return null;
 
     ctx.fillStyle = "black";
     for (let i = 0; i < validPoints.length; i++) {
