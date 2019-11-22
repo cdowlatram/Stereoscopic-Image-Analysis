@@ -1,108 +1,45 @@
 import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import CameraSettings from './components/CameraSettings';
-import DisparitySettings from './components/DisparitySettings';
+import Step2 from './SidebarSteps/Step2';
+import Step3 from './SidebarSteps/Step3';
+import Step4 from './SidebarSteps/Step4';
+import Step5 from './SidebarSteps/Step5';
 
-class ImagePane extends Component {
-  constructor(props) {
-    super(props);
-  }
+class Sidebar extends Component {
 
   render() {
     return (
       <TransitionGroup component={null}>
-        { !isStep1 && !isStep6 &&
+        { this.props.currentStep !== 1 && this.props.currentStep !== 6 &&
           <CSSTransition classNames="slide" timeout={300}>
           <div className="side-panel d-flex justify-content-center">
             <div className="side-panel__content">
               
-              <TransitionGroup component={null}>
-              { isStep2 &&
-                <CSSTransition classNames="fadeSlide" timeout={300}>
-                  <div className="side-panel__entry">
-                    <div className="mb-4">
-                      <button type="button" className="btn btn-link" onClick={this.handleOnclickBack}>Back</button>
-                    </div>
+              
+                <Step2 
+                  currentStep={this.props.currentStep}
+                  image={this.props.params.imageLeft}
+                  focalLength={this.props.params.focalLength} 
+                  sensorWidth={this.props.params.sensorWidth} 
+                  onSettingsChange={this.props.updateState}
+                  handleOnclickNext={this.props.handleOnclickNext}
+                  handleOnclickBack={this.props.handleOnclickBack}
+                />
+                <Step3
+                  currentStep={this.props.currentStep}
+                  params={this.props.params}
+                  calculatedParams={this.props.calculatedParams}
+                  onSettingsChange={this.props.updateState}
+                  handleOnclickNext={this.props.handleOnclickNext}
+                  handleOnclickBack={this.props.handleOnclickBack}
+                />
 
-                    <h2 className="mb-4">Camera Settings</h2>
-                    <CameraSettings 
-                      image={this.state.imageLeft}
-                      focalLength={this.state.focalLength} 
-                      sensorWidth={this.state.sensorWidth} 
-                      onSettingsChange={this.handleChange}
-                      />
+                <Step4
 
-                    <div className="text-right mt-5">
-                      <button type="button" className="btn btn-primary" onClick={this.handleOnclickNext}>Continue &rsaquo;</button>
-                    </div>
-                  </div>
-                </CSSTransition>
-              }
-              </TransitionGroup>
-
-              <TransitionGroup component={null}>
-              {/* Step  3 - Disparity settings select*/ isStep3 &&
-                <CSSTransition classNames="fadeSlide" timeout={300}>
-                  <div className="side-panel__entry">
-                    <div className="mb-4">
-                      <button type="button" className="btn btn-link" onClick={this.handleOnclickBack}>Back</button>
-                    </div>
-
-                    <DisparitySettings 
-                      imageLeft={this.state.imageLeft}
-                      imageRight={this.state.imageRight}
-                      focalLength={this.state.focalLength}
-                      sensorWidth={this.state.sensorWidth}
-                      minDisparity={this.state.minDisparity}
-                      numDisparity={this.state.numDisparity}
-                      currentStep={this.state.currentStep}
-                      imageWidth={this.state.image_width}
-                      imageHeight={this.state.image_height}
-                      validPoints={this.state.validPoints}
-                      setValidPoints={this.setValidPoints}
-                      onSettingsChange={this.handleChange}
-                      errorLog={this.errorLog}
-                    />
-                  </div>
-                </CSSTransition>
-              }
-              </TransitionGroup>
+                />
 
               <TransitionGroup component={null}>
-              {/* Step  4*/ isStep4 &&
-                <CSSTransition classNames="fadeSlide" timeout={300}>
-                  <div className="side-panel__entry">
-                    <div className="mb-4">
-                      <button type="button" className="btn btn-link" onClick={this.handleOnclickBack}>Back</button>
-                    </div>
-
-                    <h2 className="mb-4">Reference Length</h2>
-                    <p>Click on the image to set two points for your reference length</p>
-
-                    <div className="mt-4 mb-5">
-                      <button type="button" className="btn btn-secondary">Clear Reference Points</button>
-                    </div>
-
-                    <label htmlFor="referenceLength">Length of Reference Measurement</label>
-                    <div className="input-group mb-3">
-                      <input type="text" 
-                        id="referenceLength" 
-                        name="referenceLength" 
-                        className="form-control" 
-                        onChange={this.onChangeHandler}
-                        value={this.state.referenceLength}/>
-                    </div>
-
-                    <div className="text-right mt-5">
-                      <button type="button" className="btn btn-primary" onClick={this.handleOnclickNext}>Continue &rsaquo;</button>
-                    </div>
-                  </div>
-                </CSSTransition>
-              }
-              </TransitionGroup>
-
-              <TransitionGroup component={null}>
-              {/* Step  5*/ isStep5 &&
+              {/* Step  5*/ this.props.currentStep === 5 &&
                 <CSSTransition classNames="fadeSlide" timeout={300}>
                   <div className="side-panel__entry">
                     <div className="mb-4">
@@ -134,4 +71,4 @@ class ImagePane extends Component {
   }
 }
 
-export default ImagePane;
+export default Sidebar;

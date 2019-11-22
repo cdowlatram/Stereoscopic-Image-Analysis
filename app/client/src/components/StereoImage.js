@@ -12,16 +12,15 @@ class Canvas extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let shouldUpdate = false;
     if (
       nextProps.file !== this.props.file ||
       nextProps.validPoints !== this.props.validPoints ||
       nextProps.points !== this.props.points
     ) {
-      shouldUpdate = true;
+      return true;
     }
 
-    return shouldUpdate;
+    return false;
   }
 
   componentDidUpdate() {
@@ -41,9 +40,10 @@ class Canvas extends React.Component {
           canvas.width = img.width * imageRatio
           canvas.height = img.height * imageRatio
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        
-          this.updateValue('image_width', canvas.width)
-          this.updateValue('image_height', canvas.height)
+
+          if (this.props.canvasMode !== "imageRight") {
+            this.updateValue('image_height', canvas.height)
+          }
 
           this.renderValidPoints(ctx, this.props.validPoints, canvas.width, canvas.height)
 
@@ -73,7 +73,7 @@ class Canvas extends React.Component {
   }
 
   updateValue = (name, value) => {
-    this.props.updateValue(name, value)
+    this.props.updateValue({[name]: value})
   }
 
   // Sets points on canvas
@@ -166,15 +166,19 @@ class StereoImage extends Component {
   }
 
   changeImage = event => {
-    this.props.onImageChange(this.props.idName, event.target.files[0])
+    this.props.onImageChange({
+      [this.props.idName]: event.target.files[0]
+    })
   }
 
-  updateValue = (name, value) => {
-    this.props.onImageChange(name, value)
+  updateValue = newState => {
+    this.props.onImageChange(newState)
   }
 
-  onClickHandler = event => {
-    this.props.onImageChange(this.props.idName, "")
+  clearImage = event => {
+    this.props.onImageChange({
+      [this.props.idName]: ""
+    })
   }
 
   render() {
@@ -196,7 +200,7 @@ class StereoImage extends Component {
             setPoint={this.setPoint}
             updateValue={this.updateValue}
           /><br/>
-          <label onClick={this.onClickHandler} htmlFor={this.props.idName}>Clear Image</label>
+          <label onClick={this.clearImage} htmlFor={this.props.idName}>Clear Image</label>
         </span>
     }
 

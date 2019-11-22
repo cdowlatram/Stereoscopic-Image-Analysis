@@ -66,7 +66,7 @@ class DisparitySettings extends Component {
   }
 
   changeSetting = (name, value) => {
-    this.props.onSettingsChange(name, value);
+    this.props.onSettingsChange({[name]: value});
   }
 
   onClickHandler = event => {

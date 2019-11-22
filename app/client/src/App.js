@@ -1,39 +1,29 @@
 import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ImagePanel from './components/ImagePanel';
-// import Sidebar from './components/Sidebar';
+import Sidebar from './components/Sidebar';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      params: {
-        files: {
-          imageLeft: '',
-          imageRight: '',
-        },
-        cameraParams: {
-          focalLength: '',
-          sensorWidth: '',
-        },
-        DisparityParams: {
-          minDisparity: 1,
-          numDisparity: 80,
-        },
-        userPoints: {
-          referencePt1: '',
-          referencePt2: '',
-          referenceLength: '',
-          measurePt1: '',
-          measurePt2: '',
-        },
-      },
+      imageLeft: '',
+      imageRight: '',
+      focalLength: '',
+      sensorWidth: '',
+      minDisparity: 1,
+      numDisparity: 80,
+      referencePt1: '',
+      referencePt2: '',
+      referenceLength: '',
+      measurePt1: '',
+      measurePt2: '',
       estimatedDistance: '',
-      image_width: '',
+      image_width: 540,
       image_height: '',
       validPoints: '',
-      currentStep: 1,
+      currentStep: 2,
       errorLog: '',
     };
   }
@@ -101,6 +91,36 @@ class App extends Component {
   }
 
   render() {
+    const files = {
+            imageLeft: this.state.imageLeft,
+            imageRight: this.state.imageRight,
+          },
+          userPoints = {
+            referencePt1: this.state.referencePt1,
+            referencePt2: this.state.referencePt2,
+            measurePt1: this.state.measurePt1,
+            measurePt2: this.state.measurePt2,
+          },
+          params = {
+            imageLeft: this.state.imageLeft,
+            imageRight: this.state.imageRight,
+            focalLength: this.state.focalLength,
+            sensorWidth: this.state.sensorWidth,
+            minDisparity: this.state.minDisparity,
+            numDisparity: this.state.numDisparity,
+            referencePt1: this.state.referencePt1,
+            referencePt2: this.state.referencePt2,
+            referenceLength: this.state.referenceLength,
+            measurePt1: this.state.measurePt1,
+            measurePt2: this.state.measurePt2,
+          },
+          calculatedParams = {
+            estimatedDistance: this.state.estimatedDistance,
+            image_width: this.state.image_width,
+            image_height: this.state.image_height,
+            validPoints: this.state.validPoints,
+          }
+
     return (
       <div className="App">
         <header>
@@ -110,18 +130,26 @@ class App extends Component {
         </header>
         <div className="Main d-flex justify-content-between">
           <ImagePanel
-            files={this.state.params.files}
+            resizeWidth={this.state.image_width}
+            files={files}
             validPoints={this.state.validPoints}
-            userPoints={this.state.params.userPoints}
+            userPoints={userPoints}
             currentStep={this.state.currentStep}
-            updateState={this.handeStateUpdate}
-          />
-          {/*
+            updateState={this.handleStateUpdate}
+            handleOnclickNext={this.handleOnclickNext}
+            handleOnclickBack={this.handleOnclickBack}
+          >
+
+          </ImagePanel>
+          
           <Sidebar 
-            params={this.state.params}
-            updateState={this.handeStateUpdate}
+            params={params}
+            calculatedParams={calculatedParams}
+            currentStep={this.state.currentStep}
+            updateState={this.handleStateUpdate}
+            handleOnclickNext={this.handleOnclickNext}
+            handleOnclickBack={this.handleOnclickBack}
           />
-        */}
         </div>
       </div>
     );

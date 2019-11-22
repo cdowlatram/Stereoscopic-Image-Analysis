@@ -36,7 +36,7 @@ class CameraSettings extends Component {
   }
 
   changeSetting = event => {
-    this.props.onSettingsChange({[event.target.name], event.target.value})
+    this.props.onSettingsChange(event.target.name, event.target.value)
   }
 
   onClickHandler = event => {

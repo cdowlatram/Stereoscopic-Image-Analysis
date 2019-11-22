@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import StereoImage from './components/StereoImage';
+import StereoImage from './StereoImage';
 
 class ImagePanel extends Component {
   constructor(props) {
@@ -11,12 +11,30 @@ class ImagePanel extends Component {
     this.updateParentState = this.updateParentState.bind(this);
   }
 
-  updateParentState = () => {
-    this.props.updateState({});
+  updateParentState = newState => {
+    this.props.updateState(newState);
+  }
+
+  handleOnclickNext = () => {
+    let nextStep = this.props.currentStep + 1;
+    this.changeCurrentStep(nextStep);
+  }
+
+  handleOnclickBack = () => {
+    let nextStep = this.props.currentStep - 1;
+    nextStep = Math.max(0, nextStep);
+    this.changeCurrentStep(nextStep);
+  }
+
+  changeCurrentStep = step => {
+    this.props.updateState({
+      currentStep: step
+    });
   }
 
   render() {
-    const imagesUploaded = (this.props.files.imageLeft !== '' && this.props.files.imageLeft !== '')
+    const imagesUploaded = (this.props.files.imageLeft !== '' && this.props.files.imageRight !== '')
+
     return (
       <div className="image-panel col d-flex justify-content-center">
         <div>
@@ -28,10 +46,7 @@ class ImagePanel extends Component {
                 </div>
               </CSSTransition>
             )}
-          </TransitionGroup>
 
-
-          <TransitionGroup component={null}>
             {this.props.currentStep == 1 && !imagesUploaded && (
               <CSSTransition classNames="fade" timeout={150}>
                 <h2 className="mb-3">Please upload your matching left and right  images</h2>
@@ -45,9 +60,9 @@ class ImagePanel extends Component {
               image={this.props.files.imageLeft}
               labelText="Click to Upload Left Image"
               resizeWidth="540"
-              onImageChange={this.handleChange}
+              onImageChange={this.updateParentState}
               canvasMode={this.props.canvasMode}
-              points={points}
+              points={this.props.userPoints}
               validPoints={this.props.validPoints}
               setPoint={this.setPoint}
             />
@@ -60,10 +75,10 @@ class ImagePanel extends Component {
                       idName="imageRight"
                       image={this.props.files.imageRight} 
                       labelText="Click to Upload Right Image"
-                      resizeWidth="540"
-                      onImageChange={this.handleChange}
-                      canvasMode="right_image"
-                      points={points}
+                      resizeWidth={this.props.resizeWidth}
+                      onImageChange={this.updateParentState}
+                      canvasMode="imageRight"
+                      points={this.props.userPoints}
                       validPoints=""
                       setPoint={this.setPoint}
                     />
