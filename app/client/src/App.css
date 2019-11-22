@@ -37,6 +37,14 @@ hr {
   border-color: #0067EF;
 }
 
+#loading {
+  opacity: 0.5;
+  position: absolute;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .btn-secondary {
   background-color: #344050;
   border-color: #344050;

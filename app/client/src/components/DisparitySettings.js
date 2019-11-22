@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import loading from '../images/source.gif';
+import '../App.css'
 
 class DisparitySettings extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class DisparitySettings extends Component {
     request.onreadystatechange = function() {
       if(this.readyState === 4) {
         if(this.status === 200) {
-          react.changeSetting('errorLog', '')
+          react.changeSetting('errorLog', '');
           react.setValidPoints(this.response["is_valid"], this.response["points"]);
           // react.changeSetting('currentStep', react.props.currentStep+1)
         } else {
@@ -65,15 +66,16 @@ class DisparitySettings extends Component {
     // Set valid/invalid points
     for(i=0; i < points.length; i++) {
       let x = points[i][0],
-          y = points[i][1]
+          y = points[i][1];
+          
       array[x][y] = is_valid;
     }
 
-    this.changeSetting('validPoints', array)
+    this.changeSetting('validPoints', array);
   }
 
   changeSetting = (name, value) => {
-    this.props.onSettingsChange(name, value)
+    this.props.onSettingsChange(name, value);
   }
 
   onClickHandler = event => {
@@ -81,7 +83,7 @@ class DisparitySettings extends Component {
   }
 
   onChangeHandler = event => {
-    this.props.onSettingsChange(event.target.name, event.target.value)
+    this.props.onSettingsChange(event.target.name, event.target.value);
   }
 
   render() {
@@ -114,7 +116,7 @@ class DisparitySettings extends Component {
         <div className="text-right mt-5">
           
           <button type="button" className="btn btn-primary" onClick={this.getValidPoints}>Continue &rsaquo;</button>
-          { this.state.loading && <img src={loading} alt="Loading.."/>}
+          { this.state.loading && <img id="loading" src={loading} alt="Loading.."/>}
         </div>
       </div>
     );

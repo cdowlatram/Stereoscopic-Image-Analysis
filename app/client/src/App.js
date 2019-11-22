@@ -24,7 +24,7 @@ class App extends Component {
       canvasMode: 'view',
       image_width: '',
       image_height: '',
-      validPoints: {},
+      validPoints: '',
       currentStep: 1,
       errorLog: '',
     };
@@ -148,7 +148,7 @@ class App extends Component {
 
                 <TransitionGroup component={null}>
                   {this.state.currentStep === 1 && (
-                    <CSSTransition classNames="fade" timeout={150}>
+                    <CSSTransition classNames="fade" timeout={0}>
                       <div className="ml-3">
                         <StereoImage 
                           idName="imageRight"
@@ -158,7 +158,7 @@ class App extends Component {
                           onImageChange={this.handleChange}
                           canvasMode="right_image"
                           points={points}
-                          validPoints={this.state.validPoints}
+                          validPoints=""
                           setPoint={this.setPoint}
                         />
                       </div>
@@ -207,7 +207,7 @@ class App extends Component {
               <div className="side-panel__content">
                 
                 <TransitionGroup component={null}>
-                {/* Step  2*/ isStep2 &&
+                { isStep2 &&
                   <CSSTransition classNames="fadeSlide" timeout={300}>
                     <div className="side-panel__entry">
                       <div className="mb-4">
@@ -246,8 +246,8 @@ class App extends Component {
                         minDisparity={this.state.minDisparity}
                         numDisparity={this.state.numDisparity}
                         currentStep={this.state.currentStep}
-                        imageWidth={this.image_width}
-                        imageHeight={this.image_height}
+                        imageWidth={this.state.image_width}
+                        imageHeight={this.state.image_height}
                         validPoints={this.state.validPoints}
                         setValidPoints={this.setValidPoints}
                         onSettingsChange={this.handleChange}
