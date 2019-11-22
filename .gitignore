@@ -1,4 +1,6 @@
 website/node/node_modules/*
+app/api/node_modules/*
+app/client/node_modules/*
 website/temp/*
 # website/node/config.js
 __pycache__/
