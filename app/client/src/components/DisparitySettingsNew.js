@@ -38,16 +38,14 @@ class DisparitySettings extends Component {
         } else {
           react.changeSetting('errorLog', this.response);
         }
-        // loading_vp.hidden = true;
         react.setState({loading: false});
       }
     };
-    console.log(form)
-    react.setState({ loading: true});
+    console.log(form);
+    react.setState({loading: true});
     request.open("POST", "http://localhost:9000/valid_points");
     request.send(form);
   }
-
 
   setValidPoints = (is_valid, points) => {
     let i, j,
