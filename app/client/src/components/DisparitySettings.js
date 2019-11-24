@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
-import '../App.css'
+import LoadingScreen from './LoadingScreen';
 
 class DisparitySettings extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isLoading: false,
+      loadingMessage: 'Calculating valid points on image...'
+    };
+
     this.changeSetting = this.changeSetting.bind(this);
     this.setValidPoints = this.setValidPoints.bind(this);
-    this.state = {
-      loading: false
-    };
   }
 
   getValidPoints = () => {
+    this.setState({isLoading: true});
+
     // TODO: Do local data validation
-    
-    this.changeSetting('waiting', true);
     
     let form = new FormData();
     form.append('image_left_name', this.props.params.imageLeftName);
@@ -37,10 +40,9 @@ class DisparitySettings extends Component {
         } else {
           react.changeSetting('errorLog', this.response);
         }
-        react.changeSetting('waiting', false);
+        react.setState({isLoading: false});
       }
     };
-    react.setState({ loading: true});
     request.open("POST", "http://localhost:9000/valid_points");
     request.send(form);
   }
@@ -86,6 +88,11 @@ class DisparitySettings extends Component {
   render() {
     return (
       <div>
+        <LoadingScreen 
+          isLoading={this.state.isLoading}
+          loadingMessage={this.state.loadingMessage}
+        />
+
         <label htmlFor="numDisparity">Number of Disparity</label>
         <div className="input-group mb-3">
           <input type="text" 

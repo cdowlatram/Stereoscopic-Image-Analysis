@@ -1,10 +1,21 @@
 import React from 'react';
+import LoadingScreen from './LoadingScreen';
 
 class MeasurePoints extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: false,
+      loadingMessage: 'Measuring distance between selected points...'
+    };
+  }
 
   predictLength = () => {
+    this.setState({isLoading: true});
+
     // TODO: Do local data validation
-    
+
     let form = new FormData();
     form.append('image_left_name', this.props.params.imageLeftName);
     form.append('image_right_name', this.props.params.imageRightName);
@@ -36,7 +47,7 @@ class MeasurePoints extends React.Component {
         } else {
           // errorLog.innerHTML = this.responseText;
         }
-        // loading_ed.hidden = true;
+        react.setState({isLoading: false});
       }
     };
     request.open("POST", "http://localhost:9000/estimate_distance");
@@ -46,6 +57,11 @@ class MeasurePoints extends React.Component {
   render() {
     return (
       <div>
+        <LoadingScreen 
+          isLoading={this.state.isLoading}
+          loadingMessage={this.state.loadingMessage}
+        />
+        
         <h2 className="mb-4">Points to Measure</h2>
         <p>Click on the image to set two points you would like the measurement of.</p>
 

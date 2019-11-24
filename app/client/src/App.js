@@ -32,7 +32,6 @@ class App extends Component {
       image_height: '',
       validPoints: '',
       currentStep: 1,
-      waiting: false,
       errorLog: '',
     };
   }
@@ -60,7 +59,6 @@ class App extends Component {
       image_height: '',
       validPoints: '',
       currentStep: 1,
-      waiting: false,
       errorLog: '',
     })
   }
@@ -203,7 +201,7 @@ class App extends Component {
           { estimatedDistance !== '' &&
           <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
             <div>
-              <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {estimatedDistance}</span>
+              <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {estimatedDistance} {this.state.measureUnit}</span>
             </div>
             <div></div>
           </div>
@@ -212,7 +210,7 @@ class App extends Component {
           { this.state.currentStep > 3 &&
           <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
             <div>
-              <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.state.referenceLength}</span>
+              <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.state.referenceLength} {this.state.referenceUnit}</span>
             </div>
             <div><button type="button" className="btn btn-secondary">Edit</button></div>
           </div>
@@ -227,8 +225,6 @@ class App extends Component {
               <div><button type="button" className="btn btn-secondary">Edit</button></div>
             </div>
           }
-
-          { this.state.waiting && <img id="loading" src={loading} alt="Loading.."/>}
 
           </ImagePanel>
           

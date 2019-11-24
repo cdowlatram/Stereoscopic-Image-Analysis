@@ -145,6 +145,62 @@ hr {
   padding: 15px 19px;
 }
 
+/* Loading screen */
+.loading {
+  background-color: rgba(0,0,0,.75);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200;
+}
+
+.arc {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+  border-top-color: transparent;
+  animation: rotate 2s infinite linear ;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -30px;
+  margin-left: -30px;
+}
+
+.innerarc {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  height: 70px;
+  width: 70px;
+  border-bottom-color: transparent;
+  animation: rotate 2s infinite reverse linear;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -35px;
+  margin-left: -35px;
+}
+
+.loading-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin-top: 60px;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+
+
+@keyframes rotate {
+  0%    { transform: rotate(0deg);  }
+  100%  { transform: rotate(360deg);  }
+}
+
 
 /* Animations */
 .fade-enter {

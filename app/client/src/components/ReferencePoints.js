@@ -8,7 +8,8 @@ class ReferencePoints extends React.Component {
     const name = target.name;
 
     this.props.updateState({
-      [name]: value
+      referenceUnit: value,
+      measurenit: value
     });
   }
 
