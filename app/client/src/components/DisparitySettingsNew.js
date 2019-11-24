@@ -15,15 +15,15 @@ class DisparitySettings extends Component {
   getValidPoints = () => {
     // TODO: Do local data validation
     
-    this.changeSetting('waiting', true);
+    // loading_vp.hidden = false;
     
     let form = new FormData();
-    form.append('image_left', this.props.params.imageLeft);
-    form.append('image_right', this.props.params.imageRight);
-    form.append('focal_length', this.props.params.focalLength);
-    form.append('sensor_width', this.props.params.sensorWidth);
-    form.append('min_disparity', this.props.params.minDisparity);
-    form.append('num_disparity', this.props.params.numDisparity);
+    form.append('image_left', this.props.imageLeft);
+    form.append('image_right', this.props.imageRight);
+    form.append('focal_length', this.props.focalLength);
+    form.append('sensor_width', this.props.sensorWidth);
+    form.append('min_disparity', this.props.minDisparity);
+    form.append('num_disparity', this.props.numDisparity);
     form.append('window_size', '9');
     
     let request = new XMLHttpRequest();
@@ -34,18 +34,18 @@ class DisparitySettings extends Component {
         if(this.status === 200) {
           react.changeSetting('errorLog', '');
           react.setValidPoints(this.response["is_valid"], this.response["points"]);
-          react.props.nextStep()
+          // react.changeSetting('currentStep', react.props.currentStep+1)
         } else {
           react.changeSetting('errorLog', this.response);
         }
-        react.changeSetting('waiting', false);
+        react.setState({loading: false});
       }
     };
-    react.setState({ loading: true});
+    console.log(form);
+    react.setState({loading: true});
     request.open("POST", "http://localhost:9000/valid_points");
     request.send(form);
   }
-
 
   setValidPoints = (is_valid, points) => {
     let i, j,
@@ -65,7 +65,7 @@ class DisparitySettings extends Component {
     for(i=0; i < points.length; i++) {
       let x = points[i][0],
           y = points[i][1];
-
+          
       array[x][y] = is_valid;
     }
 
@@ -73,15 +73,15 @@ class DisparitySettings extends Component {
   }
 
   changeSetting = (name, value) => {
-    this.props.onSettingsChange({[name]: value});
+    this.props.onSettingsChange(name, value);
+  }
+
+  onClickHandler = event => {
+    this.predictFocal();
   }
 
   onChangeHandler = event => {
-    this.props.onSettingsChange({[event.target.name]: event.target.value});
-  }
-
-  onClickHandler = () => {
-    this.getValidPoints();
+    this.props.onSettingsChange(event.target.name, event.target.value);
   }
 
   render() {
@@ -94,7 +94,7 @@ class DisparitySettings extends Component {
             name="numDisparity" 
             className="form-control" 
             onChange={this.onChangeHandler}
-            value={this.props.params.numDisparity}/>
+            value={this.props.numDisparity}/>
         </div>
 
         <hr/>
@@ -106,18 +106,14 @@ class DisparitySettings extends Component {
             name="minDisparity" 
             className="form-control" 
             onChange={this.onChangeHandler}
-            value={this.props.params.minDisparity}/>
+            value={this.props.minDisparity}/>
         </div>
 
 
 
         <div className="text-right mt-5">
-<<<<<<< HEAD
-          <button type="button" className="btn btn-primary" onClick={this.onClickHandler}>Continue &rsaquo;</button>
-=======
           <button type="button" className="btn btn-primary" onClick={this.getValidPoints}>Continue &rsaquo;</button>
           { this.state.loading && <img id="loading" src={loading} alt="Loading.."/>}
->>>>>>> 0d1ba82ebbb650898eb80a4eab0b05d110cddd73
         </div>
       </div>
     );
