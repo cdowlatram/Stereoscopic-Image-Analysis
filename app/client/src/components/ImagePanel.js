@@ -63,11 +63,16 @@ class ImagePanel extends Component {
                     </div>
                   </CSSTransition>
                 )}
+
+                {this.props.currentStep > 4 && (
+                  <CSSTransition classNames="fade" timeout={0}>
+                   {this.props.unitchanger}
+                  </CSSTransition>)}
               </TransitionGroup>
             </div>
 
 
-            {this.props.currentStep > 4 && this.props.unitchanger}
+            
 
           <div className="d-flex justify-content-between align-items-center mb-3">
             <StereoImage 

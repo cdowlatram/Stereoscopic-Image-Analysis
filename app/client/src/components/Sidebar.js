@@ -60,7 +60,7 @@ class Sidebar extends Component {
                         />
 
                       <div className="text-right mt-5">
-                        <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.handleOnclickNext}>
+                        <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.props.handleOnclickNext}>
                           Continue <img className="ml-2" src={anglerightwhite}/>
                         </button>
                       </div>
@@ -107,13 +107,13 @@ class Sidebar extends Component {
 
                     <ReferencePoints 
                       referenceLength={this.props.referenceLength}
-                      clearPoints={this.props.clearPoints}
+                      clearPoints={this.clearPoints}
                       unit={this.props.unit}
                       onChangeHandler={this.onChangeHandler}
                     />
 
                     <div className="text-right mt-5">
-                      <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.handleOnclickNext}>
+                      <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.props.handleOnclickNext}>
                         Continue <img className="ml-2" src={anglerightwhite}/>
                       </button>
                     </div>
@@ -126,8 +126,8 @@ class Sidebar extends Component {
               {/* Step  5*/ this.props.currentStep === 5 &&
                 <CSSTransition key="step5" classNames="fadeSlide" timeout={300}>
                   <div className="side-panel__entry">
-                    <div className="mb-4">
-                      <span className="clickable d-flex align-items-center" onClick={this.handleOnclickBack}>
+                    <div className="mb-5">
+                      <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
                         <img className="mr-3" src={angleright}/> Back
                       </span>
                     </div>
@@ -135,7 +135,7 @@ class Sidebar extends Component {
                     <MeasurePoints 
                       params={this.props.params}
                       updateAppState={this.props.updateState}
-                      clearPoints={this.props.clearPoints}
+                      clearPoints={this.clearPoints}
                       nextStep={this.props.handleOnclickNext}
                       errorLog={""}
                     />
