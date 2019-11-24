@@ -24,8 +24,8 @@ if not os.path.isdir(config.image_directory):
 # print('Please connect the right camera.')
 # camera_2 = IVcam(device_id_index + 1)
 
-camera_1 = cv2.VideoCapture(0)
-camera_2 = cv2.VideoCapture(1)
+camera_1 = cv2.VideoCapture(1)
+camera_2 = cv2.VideoCapture(2)
 	
 camera_1.set(cv2.CAP_PROP_FRAME_WIDTH, config.camera_width)
 camera_1.set(cv2.CAP_PROP_FRAME_HEIGHT, config.camera_height)
@@ -39,6 +39,8 @@ while True:
 	ret, frame2 = camera_2.read()
 	cropped_frame1 = frame1[config.crop_height:config.camera_width, 0:config.camera_height]
 	cropped_frame2 = frame2[config.crop_height:config.camera_width, 0:config.camera_height]
+	cropped_frame1 = numpy.rot90(cropped_frame1)
+	cropped_frame2 = numpy.rot90(cropped_frame2)
 	image = numpy.concatenate((cropped_frame1, cropped_frame2), axis=1)
 	cv2.imshow('frame', image)
 	key = cv2.waitKey(round(1000/config.framerate))
