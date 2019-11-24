@@ -77,12 +77,7 @@ app.post('/valid_points', (req, res) => {
 
 	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
 	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
-		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' 
-						+ image_left_name.replace(/ /g,"\\ ") + ' ' 
-						+ image_right_name.replace(/ /g,"\\ ") + ' ' 
-						+ focal_length.toString() + ' ' + sensor_width.toString() + ' ' 
-						+ min_disparity.toString() + ' ' + num_disparity.toString() + ' ' 
-						+ window_size.toString()
+		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString();
 
 		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 			if(err || stderr) {
@@ -92,7 +87,7 @@ app.post('/valid_points', (req, res) => {
 			} else {
 				res.status(200).send(JSON.parse(stdout));
 			}
-		}
+		});
 	} else {
 		res.status(400).send('Focal length or sensor width has an invalid value');
 	}
