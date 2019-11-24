@@ -79,7 +79,7 @@ class ImagePanel extends Component {
               session={this.props.files.session}
               idName="imageLeft"
               image={this.props.files.imageLeft}
-              image={this.props.files.imageLeft}
+              imageName={this.props.files.imageRightName} 
               labelText="Click to Upload Left Image"
               resizeWidth={this.props.resizeWidth}
               onImageChange={this.updateParentState}
@@ -97,7 +97,7 @@ class ImagePanel extends Component {
                       session={this.props.files.session}
                       idName="imageRight"
                       image={this.props.files.imageRight}
-                      imagePath={this.props.files.imageRightPath} 
+                      imageName={this.props.files.imageRightName} 
                       labelText="Click to Upload Right Image"
                       resizeWidth={this.props.resizeWidth}
                       onImageChange={this.updateParentState}

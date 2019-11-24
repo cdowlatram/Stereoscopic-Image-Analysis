@@ -180,7 +180,7 @@ class StereoImage extends Component {
       if(this.readyState === 4) {
         if(this.status === 200) {
           react.updateValue({errorLog: ''});
-          react.updateValue({[react.props.idName + 'Path']: this.response['path']});
+          react.updateValue({[react.props.idName + 'Name']: this.response['name']});
         } else {
           react.updateValue({errorLog: this.response});
         }

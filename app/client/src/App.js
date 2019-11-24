@@ -12,9 +12,9 @@ class App extends Component {
     this.state = {
       session: Date.now(),
       imageLeft: '',
-      imageLeftPath: '',
+      imageLeftName: '',
       imageRight: '',
-      imageRightPath: '',
+      imageRightName: '',
       focalLength: '',
       sensorWidth: '',
       minDisparity: 32,
@@ -40,7 +40,9 @@ class App extends Component {
   restart = () => {
     this.setState({
       imageLeft: '',
+      imageLeftName: '',
       imageRight: '',
+      imageRightName: '',
       focalLength: '',
       sensorWidth: '',
       minDisparity: 32,
@@ -122,8 +124,8 @@ class App extends Component {
             session: this.state.session,
             imageLeft: this.state.imageLeft,
             imageRight: this.state.imageRight,
-            imageLeftPath: this.state.imageLeftPath,
-            imageRightPath: this.state.imageRightPath,
+            imageLeftName: this.state.imageLeftName,
+            imageRightName: this.state.imageRightName,
           },
           userPoints = {
             referencePt1: this.state.referencePt1,
