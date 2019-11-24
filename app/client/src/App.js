@@ -3,7 +3,6 @@ import ImagePanel from './components/ImagePanel';
 import Sidebar from './components/Sidebar';
 import convert from 'convert-units';
 import './App.css';
-import loading from './images/source.gif';
 import redocircle from './icons/RedoCircle.svg';
 
 class App extends Component {
