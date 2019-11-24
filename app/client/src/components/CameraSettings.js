@@ -7,12 +7,9 @@ class CameraSettings extends Component {
   }
 
   predictFocal() {
-    let image = this.props.image;
-    
     // TODO: Do local data validation
-    
     let form = new FormData();
-    form.append('image', image);
+    form.append('image_name', this.props.imageName);
     
     let request = new XMLHttpRequest();
     let react = this;

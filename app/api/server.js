@@ -49,7 +49,7 @@ app.post('/upload', (req, res) => {
 
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
-	let image_name = req.files.image_name;
+	let image_name = req.body.image_name;
 
 	exec('python3 ' + root_path + '/python/focal_predictor.py ' 
 		+ root_path + '/images/temp/' + image_name, 
@@ -67,8 +67,8 @@ app.post('/focal_length', (req, res) => {
 // Get valid input points
 app.post('/valid_points', (req, res) => {
 	// TODO: granulate error messages
-	let image_left_name = req.files.image_left_name;
-	let image_right_name = req.files.image_right_name;
+	let image_left_name = root_path + '/images/temp/' + req.body.image_left_name;
+	let image_right_name = root_path + '/images/temp/' + req.body.image_right_name;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
 	let min_disparity = Number(req.body.min_disparity);
@@ -78,7 +78,7 @@ app.post('/valid_points', (req, res) => {
 	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
 	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
 		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString();
-
+		console.log(py_command)
 		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 			if(err || stderr) {
 				if(err) console.log(err);
@@ -95,9 +95,10 @@ app.post('/valid_points', (req, res) => {
 
 // Estimate distance
 app.post('/estimate_distance', (req, res) => {
+	console.log(req.body)
 	// TODO: granulate error messages
-	let image_left_name = req.files.image_left_name;
-	let image_right_name = req.files.image_right_name;
+	let image_left_name = req.body.image_left_name;
+	let image_right_name = req.body.image_right_name;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
 	let reference_points = pointParser(req.body.reference_points);

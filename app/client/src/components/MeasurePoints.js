@@ -6,8 +6,8 @@ class MeasurePoints extends React.Component {
     // TODO: Do local data validation
     
     let form = new FormData();
-    form.append('image_left_name', this.props.params.imageLeftPath);
-    form.append('image_right_name', this.props.params.imageRightPath);
+    form.append('image_left_name', this.props.params.imageLeftName);
+    form.append('image_right_name', this.props.params.imageRightName);
     form.append('focal_length', this.props.params.focalLength);
     form.append('sensor_width', this.props.params.sensorWidth);
     form.append('min_disparity', this.props.params.minDisparity);
@@ -31,7 +31,7 @@ class MeasurePoints extends React.Component {
         if(this.status === 200) {
           // errorLog.innerHTML = '';
           react.props.updateAppState({
-            estimatedDistance:Math.round(JSON.parse(this.responseText)["distance"]).toString()
+            estimatedDistance: Math.round(JSON.parse(this.responseText)["distance"]).toString()
           });
         } else {
           // errorLog.innerHTML = this.responseText;

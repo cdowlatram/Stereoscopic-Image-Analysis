@@ -134,8 +134,8 @@ class App extends Component {
             measurePt2: this.state.measurePt2,
           },
           params = {
-            imageLeft: this.state.imageLeft,
-            imageRight: this.state.imageRight,
+            imageLeftName: this.state.imageLeftName,
+            imageRightName: this.state.imageRightName,
             focalLength: this.state.focalLength,
             sensorWidth: this.state.sensorWidth,
             minDisparity: this.state.minDisparity,
@@ -238,7 +238,7 @@ class App extends Component {
             canvasMode={this.state.canvasMode}
             currentStep={this.state.currentStep}
             updateState={this.handleStateUpdate}
-            unit={this.state.unit}
+            referenceUnit={this.state.referenceUnit}
             handleOnclickNext={this.handleOnclickNext}
             handleOnclickBack={this.handleOnclickBack}
           />

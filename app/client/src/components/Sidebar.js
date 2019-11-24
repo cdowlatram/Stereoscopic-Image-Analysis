@@ -24,12 +24,6 @@ class Sidebar extends Component {
     this.props.updateState({
       [name]: value
     });
-
-    if (name === 'unit') {
-      this.props.updateState({
-        newUnit: value
-      });
-    }
   }
 
   render() {
@@ -53,7 +47,7 @@ class Sidebar extends Component {
 
                       <h2 className="mb-4">Camera Settings</h2>
                       <CameraSettings 
-                        image={this.props.params.imageLeft}
+                        imageName={this.props.params.imageLeftName}
                         focalLength={this.props.params.focalLength} 
                         sensorWidth={this.props.params.sensorWidth} 
                         onSettingsChange={this.props.updateState}
@@ -108,8 +102,9 @@ class Sidebar extends Component {
                     <ReferencePoints 
                       referenceLength={this.props.referenceLength}
                       clearPoints={this.clearPoints}
-                      unit={this.props.unit}
+                      referenceUnit={this.props.referenceUnit}
                       onChangeHandler={this.onChangeHandler}
+                      updateState={this.props.updateState}
                     />
 
                     <div className="text-right mt-5">
