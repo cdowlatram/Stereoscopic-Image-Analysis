@@ -17,8 +17,8 @@ class DisparitySettings extends Component {
     this.changeSetting('waiting', true);
     
     let form = new FormData();
-    form.append('image_left', this.props.params.imageLeft);
-    form.append('image_right', this.props.params.imageRight);
+    form.append('image_left_name', this.props.params.imageLeftName);
+    form.append('image_right_name', this.props.params.imageRightName);
     form.append('focal_length', this.props.params.focalLength);
     form.append('sensor_width', this.props.params.sensorWidth);
     form.append('min_disparity', this.props.params.minDisparity);
