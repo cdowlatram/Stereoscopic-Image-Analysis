@@ -26,26 +26,20 @@ app.get('/images/:file', (req, res) => {
 	res.sendFile(root_path + '/images/' + req.params['file']);
 });
 
-// Focal length estimation endpoint
-app.post('/focal_length', (req, res) => {
+// Upload image 
+app.post('/upload', (req, res) => {
 	let image = req.files.image;
+	let session_id = req.body.session_id;
+	let image_name = session_id + '_' + image.name;
+
 	if(image.mimetype.localeCompare('image/png') === 0 || image.mimetype.localeCompare('image/jpeg') === 0) {
-		image.mv(root_path + '/images/temp/' + image.name, function(err) {
+		image.mv(root_path + '/images/temp/' + image_name, function(err) {
 			if(err) {
 				console.log(err);
 				res.status(400).send('Server error');
 			} else {
 				console.log("success");
-				exec('python3 ' + root_path + '/python/focal_predictor.py ' + root_path + '/images/temp/' + image.name, (err, stdout, stderr) => {
-					if(err || stderr) {
-						if(err) console.log(err);
-						if(stderr) console.log(stderr);
-						res.status(400).send('Error predicting focal length');
-					} else {
-						res.status(200).send(stdout);
-					}
-					// fs.unlinkSync(root_path + '/images/temp/' + image.name);
-				});
+				res.status(200).send({name: image_name});
 			}
 		});
 	} else {
@@ -53,64 +47,58 @@ app.post('/focal_length', (req, res) => {
 	}
 });
 
+// Focal length estimation endpoint
+app.post('/focal_length', (req, res) => {
+	let image_name = req.body.image_name;
+
+	exec('python3 ' + root_path + '/python/focal_predictor.py ' 
+		+ root_path + '/images/temp/' + image_name, 
+		(err, stdout, stderr) => {
+			if(err || stderr) {
+				if(err) console.log(err);
+				if(stderr) console.log(stderr);
+				res.status(400).send('Error predicting focal length');
+			} else {
+				res.status(200).send(stdout);
+			}
+		});
+});
+
 // Get valid input points
 app.post('/valid_points', (req, res) => {
 	// TODO: granulate error messages
-	let image_left = req.files.image_left;
-	let image_right = req.files.image_right;
+	let image_left_name = root_path + '/images/temp/' + req.body.image_left_name;
+	let image_right_name = root_path + '/images/temp/' + req.body.image_right_name;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
 	let min_disparity = Number(req.body.min_disparity);
 	let num_disparity = Number(req.body.num_disparity);
 	let window_size = Number(req.body.window_size);
-	if((image_left.mimetype.localeCompare('image/png') === 0 || image_left.mimetype.localeCompare('image/jpeg') === 0) && (image_right.mimetype.localeCompare('image/png') === 0 || image_right.mimetype.localeCompare('image/jpeg') === 0)) {
-		if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) && ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
-			
-			let image_left_name = root_path + '/images/temp/' + image_left.name;
-			let image_right_name = root_path + '/images/temp/' + image_right.name;
 
-			image_left.mv(image_left_name, function(err) {
-				if(err) {
-					console.log(err);
-					res.status(400).send('Server error');
-				} else {
-					image_right.mv(image_right_name, function(err) {
-						if(err) {
-							console.log(err);
-							res.status(400).send('Server error');
-							fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
-						} else {
-							let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString()
-							console.log(py_command)
-							exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
-								if(err || stderr) {
-									if(err) console.log(err);
-									if(stderr) console.log(stderr);
-									res.status(400).send('Error determining valid points');
-								} else {
-									res.status(200).send(JSON.parse(stdout));
-								}
-								// fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
-								// fs.unlinkSync(root_path + '/images/temp/' + image_right.name);
-							});
-						}
-					});
-					
-				}
-			});
-		} else {
-			res.status(400).send('Focal length or sensor width has an invalid value');
-		}
+	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
+	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
+		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString();
+		console.log(py_command)
+		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
+			if(err || stderr) {
+				if(err) console.log(err);
+				if(stderr) console.log(stderr);
+				res.status(400).send('Error determining valid points');
+			} else {
+				res.status(200).send(JSON.parse(stdout));
+			}
+		});
 	} else {
-		res.status(400).send('Bad file type, must be .jpg or .png');
+		res.status(400).send('Focal length or sensor width has an invalid value');
 	}
 });
 
 // Estimate distance
 app.post('/estimate_distance', (req, res) => {
+	console.log(req.body)
 	// TODO: granulate error messages
-	let image_left = req.files.image_left;
-	let image_right = req.files.image_right;
+	let image_left_name = req.body.image_left_name;
+	let image_right_name = req.body.image_right_name;
 	let focal_length = Number(req.body.focal_length);
 	let sensor_width = Number(req.body.sensor_width);
 	let reference_points = pointParser(req.body.reference_points);
@@ -119,41 +107,30 @@ app.post('/estimate_distance', (req, res) => {
 	let min_disparity = Number(req.body.min_disparity);
 	let num_disparity = Number(req.body.num_disparity);
 	let window_size = Number(req.body.window_size);
-	if((image_left.mimetype.localeCompare('image/png') === 0 || image_left.mimetype.localeCompare('image/jpeg') === 0) && (image_right.mimetype.localeCompare('image/png') === 0 || image_right.mimetype.localeCompare('image/jpeg') === 0)) {
-		if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) && ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
-			// TODO: add more value validation checks
-			image_left.mv(root_path + '/images/temp/' + image_left.name, function(err) {
-				if(err) {
-					console.log(err);
-					res.status(400).send('Server error');
-				} else {
-					image_right.mv(root_path + '/images/temp/' + image_right.name, function(err) {
-						if(err) {
-							console.log(err);
-							res.status(400).send('Server error');
-							fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
-						} else {
-							exec('python3 ' + root_path + '/python/predict_length.py ' + root_path + '/images/temp/' + image_left.name + ' ' + root_path + '/images/temp/' + image_right.name + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' + reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' + reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' + measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' + measurement_points[1][1].toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString(), (err, stdout, stderr) => {
-								if(err || stderr) {
-									if(err) console.log(err);
-									if(stderr) console.log(stderr);
-									res.status(400).send('Error estimating distance');
-								} else {
-									res.status(200).send(JSON.parse(stdout));
-								}
-								fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
-								fs.unlinkSync(root_path + '/images/temp/' + image_right.name);
-							});
-						}
-					});
-					
-				}
-			});
-		} else {
-			res.status(400).send('Focal length or sensor width has an invalid value');
-		}
+
+	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
+	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
+		// TODO: add more value validation checks
+		exec('python3 ' + root_path + '/python/predict_length.py ' 
+		+ root_path + '/images/temp/' + image_left_name + ' '
+		+ root_path + '/images/temp/' + image_right_name + ' ' 
+		+ focal_length.toString() + ' ' + sensor_width.toString() + ' ' 
+		+ reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' 
+		+ reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' 
+		+ reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' 
+		+ measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' 
+		+ measurement_points[1][1].toString() + ' ' + min_disparity.toString() + ' ' 
+		+ num_disparity.toString() + ' ' + window_size.toString(), (err, stdout, stderr) => {
+			if(err || stderr) {
+				if(err) console.log(err);
+				if(stderr) console.log(stderr);
+				res.status(400).send('Error estimating distance');
+			} else {
+				res.status(200).send(JSON.parse(stdout));
+			}
+		});
 	} else {
-		res.status(400).send('Bad file type, must be .jpg or .png');
+		res.status(400).send('Focal length or sensor width has an invalid value');
 	}
 });
 

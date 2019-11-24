@@ -49,7 +49,7 @@ class Stereograph:
         # Calculates Disparity
         self.update_settings(self.min_disp, self.num_disp, self.window_size, self.uniquenessRatio, self.speckleWindowSize, self.speckleRange, self.disp12MaxDiff)
 
-    def update_settings(self, min_disp, num_disp, window_size, uniquenessRatio=10, speckleWindowSize=100, speckleRange=1, disp12MaxDiff=4):
+    def update_settings(self, min_disp, num_disp, window_size=9, uniquenessRatio=10, speckleWindowSize=100, speckleRange=1, disp12MaxDiff=4):
         self.min_disp = min_disp
         self.num_disp = num_disp
         self.window_size = window_size

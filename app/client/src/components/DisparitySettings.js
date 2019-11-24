@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
+import LoadingScreen from './LoadingScreen';
 
 class DisparitySettings extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isLoading: false,
+      loadingMessage: 'Calculating valid points on image...'
+    };
+
     this.changeSetting = this.changeSetting.bind(this);
     this.setValidPoints = this.setValidPoints.bind(this);
   }
 
   getValidPoints = () => {
+    this.setState({isLoading: true});
+
     // TODO: Do local data validation
     
-    // loading_vp.hidden = false;
-    
     let form = new FormData();
-    form.append('image_left', this.props.imageLeft);
-    form.append('image_right', this.props.imageRight);
-    form.append('focal_length', this.props.focalLength);
-    form.append('sensor_width', this.props.sensorWidth);
-    form.append('min_disparity', this.props.minDisparity);
-    form.append('num_disparity', this.props.numDisparity);
+    form.append('image_left_name', this.props.params.imageLeftName);
+    form.append('image_right_name', this.props.params.imageRightName);
+    form.append('focal_length', this.props.params.focalLength);
+    form.append('sensor_width', this.props.params.sensorWidth);
+    form.append('min_disparity', this.props.params.minDisparity);
+    form.append('num_disparity', this.props.params.numDisparity);
     form.append('window_size', '9');
     
     let request = new XMLHttpRequest();
@@ -29,16 +36,17 @@ class DisparitySettings extends Component {
         if(this.status === 200) {
           react.changeSetting('errorLog', '');
           react.setValidPoints(this.response["is_valid"], this.response["points"]);
-          // react.changeSetting('currentStep', react.props.currentStep+1)
+          react.props.nextStep()
         } else {
           react.changeSetting('errorLog', this.response);
         }
-        // loading_vp.hidden = true;
+        react.setState({isLoading: false});
       }
     };
     request.open("POST", "http://localhost:9000/valid_points");
     request.send(form);
   }
+
 
   setValidPoints = (is_valid, points) => {
     let i, j,
@@ -58,7 +66,7 @@ class DisparitySettings extends Component {
     for(i=0; i < points.length; i++) {
       let x = points[i][0],
           y = points[i][1];
-          
+
       array[x][y] = is_valid;
     }
 
@@ -66,20 +74,25 @@ class DisparitySettings extends Component {
   }
 
   changeSetting = (name, value) => {
-    this.props.onSettingsChange(name, value);
-  }
-
-  onClickHandler = event => {
-    this.predictFocal();
+    this.props.onSettingsChange({[name]: value});
   }
 
   onChangeHandler = event => {
-    this.props.onSettingsChange(event.target.name, event.target.value);
+    this.props.onSettingsChange({[event.target.name]: event.target.value});
+  }
+
+  onClickHandler = () => {
+    this.getValidPoints();
   }
 
   render() {
     return (
       <div>
+        <LoadingScreen 
+          isLoading={this.state.isLoading}
+          loadingMessage={this.state.loadingMessage}
+        />
+
         <label htmlFor="numDisparity">Number of Disparity</label>
         <div className="input-group mb-3">
           <input type="text" 
@@ -87,7 +100,7 @@ class DisparitySettings extends Component {
             name="numDisparity" 
             className="form-control" 
             onChange={this.onChangeHandler}
-            value={this.props.numDisparity}/>
+            value={this.props.params.numDisparity}/>
         </div>
 
         <hr/>
@@ -99,13 +112,13 @@ class DisparitySettings extends Component {
             name="minDisparity" 
             className="form-control" 
             onChange={this.onChangeHandler}
-            value={this.props.minDisparity}/>
+            value={this.props.params.minDisparity}/>
         </div>
 
 
 
         <div className="text-right mt-5">
-          <button type="button" className="btn btn-primary" onClick={this.getValidPoints}>Continue &rsaquo;</button>
+          <button type="button" className="btn btn-primary" onClick={this.onClickHandler}>Continue &rsaquo;</button>
         </div>
       </div>
     );

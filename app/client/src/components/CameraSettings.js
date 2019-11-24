@@ -1,42 +1,48 @@
 import React, { Component } from 'react';
+import LoadingScreen from './LoadingScreen';
 
 class CameraSettings extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isLoading: false,
+      loadingMessage: 'Predicting Focal Length...'
+    };
+
     this.changeSetting = this.changeSetting.bind(this);
   }
 
   predictFocal() {
-    let image = this.props.image;
-    
+    this.setState({isLoading: true});
+
     // TODO: Do local data validation
-    
+
     let form = new FormData();
-    form.append('image', image);
+    form.append('image_name', this.props.imageName);
     
     let request = new XMLHttpRequest();
     let react = this;
     request.onreadystatechange = function() {
       if(this.readyState === 4) {
         if(this.status === 200) {
-          let event = {target: {}}
-          event.target.name = "focalLength"
-          event.target.value = this.responseText
-          react.changeSetting(event)
+          react.changeSetting("focalLength", this.responseText);
         } else {
-          let event = {target: {}}
-          event.target.name = "errorLog"
-          event.target.value = this.responseText
-          react.changeSetting(event)
+          react.changeSetting("errorLog", this.responseText);
         }
+        react.setState({isLoading: false});
       }
     };
     request.open("POST", "http://localhost:9000/focal_length");
     request.send(form);
   }
 
-  changeSetting = event => {
-    this.props.onSettingsChange(event.target.name, event.target.value)
+  changeSetting = (name, value) => {
+    this.props.onSettingsChange({[name]: value});
+  }
+
+  onChangeHandler = event => {
+    this.props.onSettingsChange({[event.target.name]: event.target.value});
   }
 
   onClickHandler = event => {
@@ -45,14 +51,19 @@ class CameraSettings extends Component {
 
   render() {
     return (
-      <div className="text-left">
+      <div>
+        <LoadingScreen 
+          isLoading={this.state.isLoading}
+          loadingMessage={this.state.loadingMessage}
+        />
+
         <label htmlFor="focalLength">Focal Length</label>
         <div className="input-group mb-3">
           <input type="text" 
             id="focalLength" 
             name="focalLength" 
             className="form-control" 
-            onChange={this.changeSetting}
+            onChange={this.onChangeHandler}
             value={this.props.focalLength}/>
           <div className="input-group-append">
             <span className="input-group-text">mm</span>
@@ -71,7 +82,7 @@ class CameraSettings extends Component {
             id="sensorWidth" 
             name="sensorWidth" 
             className="form-control" 
-            onChange={this.changeSetting}
+            onChange={this.onChangeHandler}
             value={this.props.sensorWidth}/>
           <div className="input-group-append">
             <span className="input-group-text">mm</span>
