@@ -3,6 +3,7 @@ import ImagePanel from './components/ImagePanel';
 import Sidebar from './components/Sidebar';
 import convert from 'convert-units';
 import './App.css';
+import loading from './images/source.gif';
 import redocircle from './icons/RedoCircle.svg';
 
 class App extends Component {
@@ -20,14 +21,14 @@ class App extends Component {
       referenceLength: '',
       measurePt1: '',
       measurePt2: '',
-      estimatedDistance: 500,
+      estimatedDistance: '',
       measureUnit: 'mm',
       referenceUnit: 'mm',
       canvasMode: 'view',
       image_width: 640,
       image_height: '',
       validPoints: '',
-      currentStep: 5,
+      currentStep: 1,
       waiting: false,
       errorLog: '',
     };
@@ -218,6 +219,8 @@ class App extends Component {
               <div><button type="button" className="btn btn-secondary">Edit</button></div>
             </div>
           }
+
+          { this.state.waiting && <img id="loading" src={loading} alt="Loading.."/>}
 
           </ImagePanel>
           

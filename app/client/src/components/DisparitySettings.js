@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import loading from '../images/source.gif';
 import '../App.css'
 
 class DisparitySettings extends Component {
@@ -112,12 +111,7 @@ class DisparitySettings extends Component {
 
 
         <div className="text-right mt-5">
-<<<<<<< HEAD
           <button type="button" className="btn btn-primary" onClick={this.onClickHandler}>Continue &rsaquo;</button>
-=======
-          <button type="button" className="btn btn-primary" onClick={this.getValidPoints}>Continue &rsaquo;</button>
-          { this.state.loading && <img id="loading" src={loading} alt="Loading.."/>}
->>>>>>> 0d1ba82ebbb650898eb80a4eab0b05d110cddd73
         </div>
       </div>
     );
