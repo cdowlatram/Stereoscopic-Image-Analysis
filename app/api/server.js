@@ -26,9 +26,31 @@ app.get('/images/:file', (req, res) => {
 	res.sendFile(root_path + '/images/' + req.params['file']);
 });
 
+// Upload image 
+app.post('/upload', (req, res) => {
+	let image = req.files.image;
+	let session_id = req.body.session_id;
+	let path_name = session_id + '_' + image.name;
+
+	if(image.mimetype.localeCompare('image/png') === 0 || image.mimetype.localeCompare('image/jpeg') === 0) {
+		image.mv(root_path + '/images/temp/' + path_name, function(err) {
+			if(err) {
+				console.log(err);
+				res.status(400).send('Server error');
+			} else {
+				console.log("success");
+				res.status(200).send({path: path_name});
+			}
+		});
+	} else {
+		res.status(400).send('Bad file type, must be .jpg or .png');
+	}
+});
+
 // Focal length estimation endpoint
 app.post('/focal_length', (req, res) => {
 	let image = req.files.image;
+	let session_id = req.body.session_id;
 	if(image.mimetype.localeCompare('image/png') === 0 || image.mimetype.localeCompare('image/jpeg') === 0) {
 		image.mv(root_path + '/images/temp/' + image.name, function(err) {
 			if(err) {
@@ -81,7 +103,6 @@ app.post('/valid_points', (req, res) => {
 							fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
 						} else {
 							let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString()
-							console.log(py_command)
 							exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 								if(err || stderr) {
 									if(err) console.log(err);

@@ -10,8 +10,11 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      session: Date.now(),
       imageLeft: '',
+      imageLeftPath: '',
       imageRight: '',
+      imageRightPath: '',
       focalLength: '',
       sensorWidth: '',
       minDisparity: 32,
@@ -116,8 +119,11 @@ class App extends Component {
   render() {
     const estimatedDistance = this.getMeasurement(),
           files = {
+            session: this.state.session,
             imageLeft: this.state.imageLeft,
             imageRight: this.state.imageRight,
+            imageLeftPath: this.state.imageLeftPath,
+            imageRightPath: this.state.imageRightPath,
           },
           userPoints = {
             referencePt1: this.state.referencePt1,

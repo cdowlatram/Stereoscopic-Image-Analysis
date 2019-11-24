@@ -76,7 +76,9 @@ class ImagePanel extends Component {
 
           <div className="d-flex justify-content-between align-items-center mb-3">
             <StereoImage 
+              session={this.props.files.session}
               idName="imageLeft"
+              image={this.props.files.imageLeft}
               image={this.props.files.imageLeft}
               labelText="Click to Upload Left Image"
               resizeWidth={this.props.resizeWidth}
@@ -92,8 +94,10 @@ class ImagePanel extends Component {
                 <CSSTransition classNames="fade" timeout={0}>
                   <div className="ml-3">
                     <StereoImage 
+                      session={this.props.files.session}
                       idName="imageRight"
-                      image={this.props.files.imageRight} 
+                      image={this.props.files.imageRight}
+                      imagePath={this.props.files.imageRightPath} 
                       labelText="Click to Upload Right Image"
                       resizeWidth={this.props.resizeWidth}
                       onImageChange={this.updateParentState}

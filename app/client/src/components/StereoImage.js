@@ -163,7 +163,32 @@ class StereoImage extends Component {
   changeImage = event => {
     this.props.onImageChange({
       [this.props.idName]: event.target.files[0]
-    })
+    });
+
+    this.uploadImage(event.target.files[0]);
+  }
+
+  uploadImage = file => {
+    let form = new FormData();
+    form.append('image', file);
+    form.append('session_id', this.props.session);
+    
+    let request = new XMLHttpRequest();
+    request.responseType = 'json';
+    let react = this;
+    request.onreadystatechange = function() {
+      if(this.readyState === 4) {
+        if(this.status === 200) {
+          react.updateValue({errorLog: ''});
+          react.updateValue({[react.props.idName + 'Path']: this.response['path']});
+        } else {
+          react.updateValue({errorLog: this.response});
+        }
+        react.updateValue({waiting: false});
+      }
+    };
+    request.open("POST", "http://localhost:9000/upload");
+    request.send(form);
   }
 
   updateValue = newState => {
