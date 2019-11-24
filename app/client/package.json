@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
     "child_process": "^1.0.2",
+=======
+    "convert-units": "^2.3.4",
+>>>>>>> e199aaf6f3dc6a7f725ae64210d1d00ee13a72c6
     "core-js": "^3.4.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",

@@ -19,15 +19,9 @@ class CameraSettings extends Component {
     request.onreadystatechange = function() {
       if(this.readyState === 4) {
         if(this.status === 200) {
-          let event = {target: {}}
-          event.target.name = "focalLength"
-          event.target.value = this.responseText
-          react.changeSetting(event)
+          react.changeSetting("focalLength", this.responseText);
         } else {
-          let event = {target: {}}
-          event.target.name = "errorLog"
-          event.target.value = this.responseText
-          react.changeSetting(event)
+          react.changeSetting("errorLog", this.responseText);
         }
       }
     };
@@ -35,8 +29,12 @@ class CameraSettings extends Component {
     request.send(form);
   }
 
-  changeSetting = event => {
-    this.props.onSettingsChange(event.target.name, event.target.value)
+  changeSetting = (name, value) => {
+    this.props.onSettingsChange({[name]: value});
+  }
+
+  onChangeHandler = event => {
+    this.props.onSettingsChange({[event.target.name]: event.target.value});
   }
 
   onClickHandler = event => {
@@ -52,7 +50,7 @@ class CameraSettings extends Component {
             id="focalLength" 
             name="focalLength" 
             className="form-control" 
-            onChange={this.changeSetting}
+            onChange={this.onChangeHandler}
             value={this.props.focalLength}/>
           <div className="input-group-append">
             <span className="input-group-text">mm</span>
@@ -71,7 +69,7 @@ class CameraSettings extends Component {
             id="sensorWidth" 
             name="sensorWidth" 
             className="form-control" 
-            onChange={this.changeSetting}
+            onChange={this.onChangeHandler}
             value={this.props.sensorWidth}/>
           <div className="input-group-append">
             <span className="input-group-text">mm</span>

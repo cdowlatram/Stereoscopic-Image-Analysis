@@ -12,16 +12,15 @@ class Canvas extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let shouldUpdate = false;
     if (
       nextProps.file !== this.props.file ||
       nextProps.validPoints !== this.props.validPoints ||
       nextProps.points !== this.props.points
     ) {
-      shouldUpdate = true;
+      return true;
     }
 
-    return shouldUpdate;
+    return false;
   }
 
   componentDidUpdate() {
@@ -41,9 +40,10 @@ class Canvas extends React.Component {
           canvas.width = img.width * imageRatio
           canvas.height = img.height * imageRatio
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        
-          this.updateValue('image_width', canvas.width)
-          this.updateValue('image_height', canvas.height)
+
+          if (this.props.canvasMode !== "imageRight") {
+            this.updateValue('image_height', canvas.height)
+          }
 
           this.renderValidPoints(ctx, this.props.validPoints, canvas.width, canvas.height)
 
@@ -73,43 +73,38 @@ class Canvas extends React.Component {
   }
 
   updateValue = (name, value) => {
-    this.props.updateValue(name, value)
+    this.props.updateValue({[name]: value})
   }
 
   // Sets points on canvas
   setPoint = event => {
-    if (this.props.canvasMode === 'view') return null
+    const mode = this.props.canvasMode;
+
+    if (mode === 'view') return null;
 
     const canvas = this.refs.canvas;
-    const ctx = canvas.getContext("2d");
-
     let coord = canvas.getBoundingClientRect();
     let x = Math.round(event.clientX - coord.left);
     let y = Math.round(event.clientY - coord.top);
 
-    if(this.props.canvasMode === 'reference'){
-      if (this.props.points.referencePt1 === '') {
-        this.props.setPoint("referencePt1", x, y)
-      } else if (this.props.points.referencePt2 === '') {
-        this.props.setPoint("referencePt2", x, y)
-      } else {
-        this.props.setPoint("referencePt1", '', '')
-        this.props.setPoint("referencePt2", '', '')
-        this.props.setPoint("referencePt1", x, y)
+    if(!this.props.validPoints[x][y]) return null;
+
+    let points = this.props.points;
+    let point = mode + 'Pt1';
+    
+    if (points[point] !== '') {
+      point = mode + 'Pt2';
+
+      if (points[point] !== '') {
+        let newP1 = mode + 'Pt1';
+        let newP1x = points[point].x;
+        let newP1y = points[point].y;
+
+        this.props.setPoint(newP1, newP1x, newP1y);
       }
     }
 
-    if (this.props.canvasMode === 'measure') {
-      if (this.props.points.measurePt1 === '') {
-        this.props.setPoint("measurePt1", x, y)
-      } else if (this.props.points.measurePt2 === '') {
-        this.props.setPoint("measurePt2", x, y)
-      } else {
-        this.props.setPoint("measurePt1", '', '')
-        this.props.setPoint("measurePt2", '', '')
-        this.props.setPoint("measurePt1", x, y)
-      }
-    }
+    this.props.setPoint(point, x, y);
   }
 
   renderPts = (ctx, refpt1, refpt2, measurept1, measurept2) => {
@@ -166,21 +161,25 @@ class StereoImage extends Component {
   }
 
   changeImage = event => {
-    this.props.onImageChange(this.props.idName, event.target.files[0])
+    this.props.onImageChange({
+      [this.props.idName]: event.target.files[0]
+    })
   }
 
-  updateValue = (name, value) => {
-    this.props.onImageChange(name, value)
+  updateValue = newState => {
+    this.props.onImageChange(newState)
   }
 
-  onClickHandler = event => {
-    this.props.onImageChange(this.props.idName, "")
+  clearImage = event => {
+    this.props.onImageChange({
+      [this.props.idName]: ""
+    })
   }
 
   render() {
     let upload;
     if (this.props.image === "") {
-      upload = <label htmlFor={this.props.idName} className="upload-box d-flex justify-content-center align-items-center"
+      upload = <label htmlFor={this.props.idName} className="upload-box clickable d-flex justify-content-center align-items-center"
                   style={{width: this.props.resizeWidth+'px'}}>
                   <div>{this.props.labelText}</div>
                 </label>;
@@ -196,7 +195,7 @@ class StereoImage extends Component {
             setPoint={this.setPoint}
             updateValue={this.updateValue}
           /><br/>
-          <label onClick={this.onClickHandler} htmlFor={this.props.idName}>Clear Image</label>
+          <label onClick={this.clearImage} htmlFor={this.props.idName}>Clear Image</label>
         </span>
     }
 

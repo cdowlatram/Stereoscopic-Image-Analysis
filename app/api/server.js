@@ -44,7 +44,7 @@ app.post('/focal_length', (req, res) => {
 					} else {
 						res.status(200).send(stdout);
 					}
-					// fs.unlinkSync(root_path + '/images/temp/' + image.name);
+					fs.unlinkSync(root_path + '/images/temp/' + image.name);
 				});
 			}
 		});
@@ -90,8 +90,8 @@ app.post('/valid_points', (req, res) => {
 								} else {
 									res.status(200).send(JSON.parse(stdout));
 								}
-								// fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
-								// fs.unlinkSync(root_path + '/images/temp/' + image_right.name);
+								fs.unlinkSync(root_path + '/images/temp/' + image_left.name);
+								fs.unlinkSync(root_path + '/images/temp/' + image_right.name);
 							});
 						}
 					});
