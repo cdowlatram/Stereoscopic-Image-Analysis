@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import StereoImage from './StereoImage';
+import anglerightwhite from '../icons/AngleRightWhite.svg';
 
 class ImagePanel extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      canvasMode: 'view'
-    }
     this.updateParentState = this.updateParentState.bind(this);
   }
 
@@ -32,34 +30,51 @@ class ImagePanel extends Component {
     });
   }
 
+  setPoint = (point, x, y) => {
+    this.props.updateState({
+      [point]: {
+        x: x,
+        y: y,
+      }
+    });
+  }
+
   render() {
     const imagesUploaded = (this.props.files.imageLeft !== '' && this.props.files.imageRight !== '')
 
     return (
       <div className="image-panel col d-flex justify-content-center">
         <div>
-          <TransitionGroup component={null}>
-            {this.props.currentStep == 1 && imagesUploaded && (
-              <CSSTransition classNames="fade" timeout={300}>
-                <div className="text-right mb-3">
-                  <button type="button" className="btn btn-primary" onClick={this.handleOnclickNext}>Continue &rsaquo;</button>
-                </div>
-              </CSSTransition>
-            )}
+            <div className="image-panel__header d-flex">
+              <TransitionGroup component={null}>
 
-            {this.props.currentStep == 1 && !imagesUploaded && (
-              <CSSTransition classNames="fade" timeout={150}>
-                <h2 className="mb-3">Please upload your matching left and right  images</h2>
-              </CSSTransition>
-            )}
-          </TransitionGroup>
+                {this.props.currentStep === 1 && !imagesUploaded && (
+                  <CSSTransition classNames="fade" timeout={0}>
+                    <h2 className="mr-auto">Please upload your matching left and right  images</h2>
+                  </CSSTransition>
+                )}
+
+                {this.props.currentStep === 1 && imagesUploaded && (
+                  <CSSTransition classNames="fade" timeout={0}>
+                    <div className="text-right ml-auto">
+                      <button type="button" className="continue btn btn-primary d-flex align-items-center" onClick={this.handleOnclickNext}>
+                        Continue <img className="ml-2" src={anglerightwhite}/>
+                      </button>
+                    </div>
+                  </CSSTransition>
+                )}
+              </TransitionGroup>
+            </div>
+
+
+            {this.props.currentStep > 4 && this.props.unitchanger}
 
           <div className="d-flex justify-content-between align-items-center mb-3">
             <StereoImage 
               idName="imageLeft"
               image={this.props.files.imageLeft}
               labelText="Click to Upload Left Image"
-              resizeWidth="540"
+              resizeWidth={this.props.resizeWidth}
               onImageChange={this.updateParentState}
               canvasMode={this.props.canvasMode}
               points={this.props.userPoints}
@@ -88,33 +103,7 @@ class ImagePanel extends Component {
             </TransitionGroup>
           </div>
 
-          { this.props.currentStep > 4 &&
-          <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <span className="mr-5">Estimated Length: {this.props.estimatedDistance}</span>
-            </div>
-            <div><button type="button" className="btn btn-secondary">Edit</button></div>
-          </div>
-          }
-
-          { this.props.currentStep > 3 &&
-          <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <span className="mr-5">Reference Length: {this.props.referenceLength}</span>
-            </div>
-            <div><button type="button" className="btn btn-secondary">Edit</button></div>
-          </div>
-          }
-
-          { this.props.currentStep > 2 &&
-            <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-              <div>
-                <span className="mr-5">Focal Length: {this.props.focalLength} mm</span>
-                <span>Sensor Width: {this.props.sensorWidth} mm</span>
-              </div>
-              <div><button type="button" className="btn btn-secondary">Edit</button></div>
-            </div>
-          }
+          {this.props.children}
 
         </div>
       </div>

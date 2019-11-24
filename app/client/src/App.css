@@ -42,10 +42,21 @@ hr {
   border-color: #344050;
 }
 
+.continue.btn {
+  text-transform: uppercase;
+}
+
 .navbar {
   height: 70px;
+  padding: 5px 20px;
   background-color: #171920;
   box-shadow: 0px 2px 4px 0px rgba(0,0,0,.5);
+}
+
+.navbar-container {
+  width: 100%;
+  min-width: 1300px;
+  color: #0067EF;
 }
 
 .navbar-brand {
@@ -54,9 +65,30 @@ hr {
   text-transform: uppercase;
 }
 
+.navbar-brand img {
+  width: 100%;
+  max-width: 360px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.unit-changer .input-group {
+  max-width: 100px;
+}
+
+.custom-select {
+  border-radius: 0;
+}
+
 .image-panel {
   padding: 15px;
   padding-top: 120px;
+}
+
+.image-panel__header {
+  height: 50px;
 }
 
 .side-panel {
@@ -132,8 +164,8 @@ hr {
 }
 
 .slide-enter-active {
-    animation: slide-in 0.5s forwards;
-    -webkit-animation: slide-in 0.5s forwards;
+    animation: slide-in 1s forwards;
+    -webkit-animation: slide-in 1s forwards;
 }
 
 .slide-exit {
@@ -142,8 +174,8 @@ hr {
 }
 
 .slide-exit-active {
-    animation: slide-out 0.5s forwards;
-    -webkit-animation: slide-out 0.5s forwards;
+    animation: slide-out 1s forwards;
+    -webkit-animation: slide-out 1s forwards;
 }
     
 @keyframes slide-in {
@@ -188,4 +220,14 @@ hr {
   transition: all 300ms;
   animation: slide-out 300ms forwards;
   -webkit-animation: slide-out 300ms forwards;
+}
+
+/* Icons */
+
+.redo-circle-svg {
+  width: 2rem;
+  margin-right: .75rem;
+}
+.continue.btn img { 
+  height: .5rem;
 }

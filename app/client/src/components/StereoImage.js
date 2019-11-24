@@ -78,38 +78,33 @@ class Canvas extends React.Component {
 
   // Sets points on canvas
   setPoint = event => {
-    if (this.props.canvasMode === 'view') return null
+    const mode = this.props.canvasMode;
+
+    if (mode === 'view') return null;
 
     const canvas = this.refs.canvas;
-    const ctx = canvas.getContext("2d");
-
     let coord = canvas.getBoundingClientRect();
     let x = Math.round(event.clientX - coord.left);
     let y = Math.round(event.clientY - coord.top);
 
-    if(this.props.canvasMode === 'reference'){
-      if (this.props.points.referencePt1 === '') {
-        this.props.setPoint("referencePt1", x, y)
-      } else if (this.props.points.referencePt2 === '') {
-        this.props.setPoint("referencePt2", x, y)
-      } else {
-        this.props.setPoint("referencePt1", '', '')
-        this.props.setPoint("referencePt2", '', '')
-        this.props.setPoint("referencePt1", x, y)
+    if(!this.props.validPoints[x][y]) return null;
+
+    let points = this.props.points;
+    let point = mode + 'Pt1';
+    
+    if (points[point] !== '') {
+      point = mode + 'Pt2';
+
+      if (points[point] !== '') {
+        let newP1 = mode + 'Pt1';
+        let newP1x = points[point].x;
+        let newP1y = points[point].y;
+
+        this.props.setPoint(newP1, newP1x, newP1y);
       }
     }
 
-    if (this.props.canvasMode === 'measure') {
-      if (this.props.points.measurePt1 === '') {
-        this.props.setPoint("measurePt1", x, y)
-      } else if (this.props.points.measurePt2 === '') {
-        this.props.setPoint("measurePt2", x, y)
-      } else {
-        this.props.setPoint("measurePt1", '', '')
-        this.props.setPoint("measurePt2", '', '')
-        this.props.setPoint("measurePt1", x, y)
-      }
-    }
+    this.props.setPoint(point, x, y);
   }
 
   renderPts = (ctx, refpt1, refpt2, measurept1, measurept2) => {
@@ -184,7 +179,7 @@ class StereoImage extends Component {
   render() {
     let upload;
     if (this.props.image === "") {
-      upload = <label htmlFor={this.props.idName} className="upload-box d-flex justify-content-center align-items-center"
+      upload = <label htmlFor={this.props.idName} className="upload-box clickable d-flex justify-content-center align-items-center"
                   style={{width: this.props.resizeWidth+'px'}}>
                   <div>{this.props.labelText}</div>
                 </label>;
