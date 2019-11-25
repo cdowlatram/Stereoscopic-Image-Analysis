@@ -5,7 +5,6 @@ class ReferencePoints extends React.Component {
   updateReferenceUnit = event => {
     const target = event.target;
     const value = target.value;
-    const name = target.name;
 
     this.props.updateState({
       referenceUnit: value,

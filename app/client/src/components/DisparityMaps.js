@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 import LoadingScreen from './LoadingScreen';
 import angleright from '../icons/AngleRight.svg';
 
@@ -71,11 +70,11 @@ class DisparityMaps extends Component {
     request.onreadystatechange = function() {
       if(this.readyState === 4) {
         if(this.status === 200) {
-          react.changeSetting('errorLog', '');
+          react.props.updateState({errorLog: this.response});
           react.setValidPoints(this.response["is_valid"], this.response["points"]);
-          react.props.nextStep()
+          react.props.handleOnclickNext()
         } else {
-          react.changeSetting('errorLog', this.response);
+          this.props.updateState({errorLog: this.response});
         }
         react.setState({isLoading: false});
       }
@@ -106,8 +105,7 @@ class DisparityMaps extends Component {
 
       array[x][y] = is_valid;
     }
-
-    this.changeSetting('validPoints', array);
+    this.props.updateState({validPoints: array})
   }
 
   onClickHandler = () => {
@@ -119,7 +117,7 @@ class DisparityMaps extends Component {
       minDisparity: parseInt(minDisparity),
       numDisparity: parseInt(numDisparity),
     })
-    this.props.handleOnclickNext()
+    this.getValidPoints()
   }
 
   render() {
@@ -156,7 +154,7 @@ class DisparityMaps extends Component {
         />
         <div className="mb-5">
           <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
-            <img className="mr-3" src={angleright}/> Back
+            <img className="mr-3" src={angleright} alt=""/> Back
           </span>
         </div>
         <div className="mb-3">

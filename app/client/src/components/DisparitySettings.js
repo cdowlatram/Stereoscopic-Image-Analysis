@@ -14,7 +14,7 @@ class DisparitySettings extends Component {
     this.setValidPoints = this.setValidPoints.bind(this);
   }
 
-  getValidPoints = () => {
+  getValidPoints = (minDisparity, numDisparity) => {
     this.setState({isLoading: true});
 
     // TODO: Do local data validation
@@ -24,8 +24,8 @@ class DisparitySettings extends Component {
     form.append('image_right_name', this.props.params.imageRightName);
     form.append('focal_length', this.props.params.focalLength);
     form.append('sensor_width', this.props.params.sensorWidth);
-    form.append('min_disparity', this.props.params.minDisparity);
-    form.append('num_disparity', this.props.params.numDisparity);
+    form.append('min_disparity', minDisparity);
+    form.append('num_disparity', numDisparity);
     form.append('window_size', '9');
     
     let request = new XMLHttpRequest();

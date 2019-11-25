@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import convert from 'convert-units';
 import ImagePanel from './components/ImagePanel';
 import Sidebar from './components/Sidebar';
-import convert from 'convert-units';
 import redocircle from './icons/RedoCircle.svg';
 import './App.css';
 
@@ -171,7 +170,7 @@ class App extends Component {
           <nav className="navbar fixed-top">
             <div className="navbar-container d-flex justify-content-between align-items-center">
               <span className="navbar-brand clickable mr-auto" onClick={this.restart}>
-                <img src="logo.png" alt="Stereoscopic Image Analyzer"/>
+                <img src="logo.png" alt="Stereoscopic Logo"/>
               </span>
               
                 {this.state.currentStep > 1 &&
@@ -188,6 +187,12 @@ class App extends Component {
           <ImagePanel
             files={files}
             params={params}
+            estimatedDistance={estimatedDistance}
+            measureUnit={this.state.measureUnit}
+            referenceLength={this.state.referenceLength}
+            referenceUnit={this.state.referenceUnit}
+            focalLength={this.state.focalLength}
+            sensorWidth={this.state.sensorWidth}
             resizeWidth={this.state.image_width}
             resizeHeight={this.state.image_height}
             canvasMode={this.state.canvasMode}

@@ -76,7 +76,7 @@ app.post('/disparity_maps', (req, res) => {
 	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
 	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
 		let py_command = 'python3 ' + root_path + '/python/disparity_maps.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString()+ ' ' + session_id.toString();
-		console.log(py_command)
+		
 		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 			if(err || stderr) {
 				if(err) console.log(err);

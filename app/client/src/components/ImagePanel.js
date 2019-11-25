@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import StereoImage from './StereoImage';
 import DisparityMaps from './DisparityMaps';
-import angleright from '../icons/AngleRight.svg';
 import anglerightwhite from '../icons/AngleRightWhite.svg';
 
 class ImagePanel extends Component {
@@ -60,7 +59,7 @@ class ImagePanel extends Component {
                   <CSSTransition classNames="fade" timeout={0}>
                     <div className="text-right ml-auto">
                       <button type="button" className="continue btn btn-primary d-flex align-items-center" onClick={this.handleOnclickNext}>
-                        Continue <img className="ml-2" src={anglerightwhite}/>
+                        Continue <img className="ml-2" src={anglerightwhite} alt=">"/>
                       </button>
                     </div>
                   </CSSTransition>
@@ -115,6 +114,7 @@ class ImagePanel extends Component {
                     )}
                   </TransitionGroup>
                 </div>
+
               </CSSTransition>
             )}
           </TransitionGroup>
@@ -124,15 +124,44 @@ class ImagePanel extends Component {
               <DisparityMaps
                 session={this.props.files.session}
                 params={this.props.params}
+                imageWidth={this.props.resizeWidth}
+                imageHeight={this.props.resizeHeight}
                 mapWidth={this.props.resizeWidth/2}
                 mapHeight={this.props.resizeHeight/2}
                 updateState={this.props.updateState}
                 handleOnclickNext={this.props.handleOnclickNext}
                 handleOnclickBack={this.props.handleOnclickBack}
               />
-
             </CSSTransition>
           )}
+          
+          { this.props.estimatedDistance !== '' &&
+          (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
+                              <div>
+                                <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {this.props.estimatedDistance} {this.props.measureUnit}</span>
+                              </div>
+                              <div></div>
+                            </div>)
+          }
+
+          { this.props.currentStep > 3 &&
+          (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
+                              <div>
+                                <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.props.referenceLength} {this.props.referenceUnit}</span>
+                              </div>
+                              <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                            </div>)
+          }
+
+          { this.props.currentStep > 2 &&
+            (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
+                                  <div>
+                                    <span className="mr-5"><strong className="mr-3">Focal Length:</strong> {this.props.focalLength} mm</span>
+                                    <span><strong className="mr-3">Sensor Width: {this.props.sensorWidth} mm</strong></span>
+                                  </div>
+                                  <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                                </div>)
+          }
 
         </div>
       </div>

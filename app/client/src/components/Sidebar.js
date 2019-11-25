@@ -41,7 +41,7 @@ class Sidebar extends Component {
                     <div className="side-panel__entry">
                       <div className="mb-5">
                         <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
-                          <img className="mr-3" src={angleright}/> Back
+                          <img className="mr-3" src={angleright} alt=">"/> Back
                         </span>
                       </div>
 
@@ -55,7 +55,7 @@ class Sidebar extends Component {
 
                       <div className="text-right mt-5">
                         <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.props.handleOnclickNext}>
-                          Continue <img className="ml-2" src={anglerightwhite}/>
+                          Continue <img className="ml-2" src={anglerightwhite} alt=""/>
                         </button>
                       </div>
                     </div>
@@ -69,7 +69,7 @@ class Sidebar extends Component {
                     <div className="side-panel__entry">
                       <div className="mb-5">
                         <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
-                          <img className="mr-3" src={angleright}/> Back
+                          <img className="mr-3" src={angleright} alt=""/> Back
                         </span>
                       </div>
 
@@ -95,7 +95,7 @@ class Sidebar extends Component {
                   <div className="side-panel__entry">
                     <div className="mb-5">
                       <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
-                        <img className="mr-3" src={angleright}/> Back
+                        <img className="mr-3" src={angleright} alt=""/> Back
                       </span>
                     </div>
 
@@ -109,7 +109,7 @@ class Sidebar extends Component {
 
                     <div className="text-right mt-5">
                       <button type="button" className="continue ml-auto btn btn-primary d-flex align-items-center" onClick={this.props.handleOnclickNext}>
-                        Continue <img className="ml-2" src={anglerightwhite}/>
+                        Continue <img className="ml-2" src={anglerightwhite} alt=""/>
                       </button>
                     </div>
                   </div>
@@ -123,7 +123,7 @@ class Sidebar extends Component {
                   <div className="side-panel__entry">
                     <div className="mb-5">
                       <span className="clickable d-flex align-items-center" onClick={this.props.handleOnclickBack}>
-                        <img className="mr-3" src={angleright}/> Back
+                        <img className="mr-3" src={angleright} alt=""/> Back
                       </span>
                     </div>
 
