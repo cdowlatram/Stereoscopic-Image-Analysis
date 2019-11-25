@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
+import convert from 'convert-units';
 import ImagePanel from './components/ImagePanel';
 import Sidebar from './components/Sidebar';
-import convert from 'convert-units';
-import './App.css';
-import loading from './images/source.gif';
 import redocircle from './icons/RedoCircle.svg';
+import './App.css';
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class App extends Component {
       referenceUnit: 'mm',
       canvasMode: 'view',
       image_width: 640,
-      image_height: '',
+      image_height: 600,
       validPoints: '',
       currentStep: 1,
       errorLog: '',
@@ -56,7 +55,7 @@ class App extends Component {
       referenceUnit: 'mm',
       canvasMode: 'view',
       image_width: 640,
-      image_height: '',
+      image_height: 600,
       validPoints: '',
       currentStep: 1,
       errorLog: '',
@@ -149,12 +148,13 @@ class App extends Component {
             image_width: this.state.image_width,
             image_height: this.state.image_height,
             validPoints: this.state.validPoints,
-          }
+          };
+
     const unitchanger = 
           <div className="unit-changer d-flex justify-content-start align-items-center mb-3">
             <h5 className="text-nowrap mr-4 mb-0">Unit of Measure</h5>
-            <div class="input-group">
-              <select class="custom-select" name="measureUnit" value={this.state.measureUnit} onChange={this.handleChange}>
+            <div className="input-group">
+              <select className="custom-select" name="measureUnit" value={this.state.measureUnit} onChange={this.handleChange}>
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="m">m</option>
@@ -162,7 +162,7 @@ class App extends Component {
                 <option value="ft">feet</option>
               </select>
             </div>
-          </div>
+          </div>;
 
     return (
       <div className="App">
@@ -181,11 +181,14 @@ class App extends Component {
             </div>
           </nav>
         </header>
+
         <div className="Main d-flex justify-content-between">
 
           <ImagePanel
-            resizeWidth={this.state.image_width}
             files={files}
+            params={params}
+            resizeWidth={this.state.image_width}
+            resizeHeight={this.state.image_height}
             canvasMode={this.state.canvasMode}
             validPoints={this.state.validPoints}
             userPoints={userPoints}
@@ -194,39 +197,7 @@ class App extends Component {
             handleOnclickNext={this.handleOnclickNext}
             handleOnclickBack={this.handleOnclickBack}
             unitchanger={unitchanger}
-          >
-
-
-
-          { estimatedDistance !== '' &&
-          <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {estimatedDistance} {this.state.measureUnit}</span>
-            </div>
-            <div></div>
-          </div>
-          }
-
-          { this.state.currentStep > 3 &&
-          <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.state.referenceLength} {this.state.referenceUnit}</span>
-            </div>
-            <div><button type="button" className="btn btn-secondary">Edit</button></div>
-          </div>
-          }
-
-          { this.state.currentStep > 2 &&
-            <div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-              <div>
-                <span className="mr-5"><strong className="mr-3">Focal Length:</strong> {this.state.focalLength} mm</span>
-                <span><strong className="mr-3">Sensor Width: {this.state.sensorWidth} mm</strong></span>
-              </div>
-              <div><button type="button" className="btn btn-secondary">Edit</button></div>
-            </div>
-          }
-
-          </ImagePanel>
+          />
           
           <Sidebar 
             params={params}

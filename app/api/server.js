@@ -65,6 +65,33 @@ app.post('/focal_length', (req, res) => {
 });
 
 // Get valid input points
+app.post('/disparity_maps', (req, res) => {
+	// TODO: granulate error messages
+	let image_left_name = root_path + '/images/temp/' + req.body.image_left_name;
+	let image_right_name = root_path + '/images/temp/' + req.body.image_right_name;
+	let focal_length = Number(req.body.focal_length);
+	let sensor_width = Number(req.body.sensor_width);
+	let session_id = req.body.session_id;
+
+	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
+	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
+		let py_command = 'python3 ' + root_path + '/python/disparity_maps.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString()+ ' ' + session_id.toString();
+		console.log(py_command)
+		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
+			if(err || stderr) {
+				if(err) console.log(err);
+				if(stderr) console.log(stderr);
+				res.status(400).send('Error creating disparity maps.');
+			} else {
+				res.status(200).send(JSON.parse(stdout));
+			}
+		});
+	} else {
+		res.status(400).send('Focal length or sensor width has an invalid value');
+	}
+});
+
+// Get valid input points
 app.post('/valid_points', (req, res) => {
 	// TODO: granulate error messages
 	let image_left_name = root_path + '/images/temp/' + req.body.image_left_name;

@@ -108,6 +108,8 @@ class Canvas extends React.Component {
   }
 
   renderPts = (ctx, refpt1, refpt2, measurept1, measurept2) => {
+    ctx.lineWidth = 3;
+    
     if(refpt1 !== ''){
       ctx.fillStyle = "blue";
       ctx.fillRect(refpt1.x,refpt1.y,1,1);

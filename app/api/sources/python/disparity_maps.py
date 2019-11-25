@@ -8,7 +8,7 @@ import cv2 as cv
 import numpy as np
 
 directory = os.path.dirname(os.path.realpath(__file__)) 
-directory = directory + "/../images/temp/"
+directory = directory + "/../images/"
 
 try:
     imgL = cv.imread(sys.argv[1])
@@ -16,8 +16,7 @@ try:
     imgL = smm.resize_image(imgL, 640)
     imgR = smm.resize_image(imgR, 640)
     stereo = smm.Stereograph(imgL, imgR, sys.argv[3], sys.argv[4])
-    stereo.update_settings(int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7]))
-    session = str(sys.argv[8])
+    session = str(sys.argv[5])
     
     response = []
     for i in range(1,3):

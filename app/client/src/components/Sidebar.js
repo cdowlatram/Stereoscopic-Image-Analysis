@@ -29,7 +29,7 @@ class Sidebar extends Component {
   render() {
     return (
       <TransitionGroup component={null}>
-        { this.props.currentStep !== 1 && this.props.currentStep !== 6 &&
+        { this.props.currentStep !== 1 && this.props.currentStep !== 3 && this.props.currentStep !== 6  &&
           <CSSTransition key="sidebar" classNames="slide" timeout={300}>
           <div className="side-panel d-flex justify-content-center">
             <div className="side-panel__content">

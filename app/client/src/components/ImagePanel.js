@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import StereoImage from './StereoImage';
+import DisparityMaps from './DisparityMaps';
+import angleright from '../icons/AngleRight.svg';
 import anglerightwhite from '../icons/AngleRightWhite.svg';
 
 class ImagePanel extends Component {
@@ -73,46 +75,64 @@ class ImagePanel extends Component {
 
 
             
+          <TransitionGroup component={null}>
+            {this.props.currentStep !== 3 && (
+              <CSSTransition classNames="fade" timeout={0}>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <StereoImage 
+                    session={this.props.files.session}
+                    idName="imageLeft"
+                    image={this.props.files.imageLeft}
+                    imageName={this.props.files.imageRightName} 
+                    labelText="Click to Upload Left Image"
+                    resizeWidth={this.props.resizeWidth}
+                    onImageChange={this.updateParentState}
+                    canvasMode={this.props.canvasMode}
+                    points={this.props.userPoints}
+                    validPoints={this.props.validPoints}
+                    setPoint={this.setPoint}
+                  />
 
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <StereoImage 
-              session={this.props.files.session}
-              idName="imageLeft"
-              image={this.props.files.imageLeft}
-              imageName={this.props.files.imageRightName} 
-              labelText="Click to Upload Left Image"
-              resizeWidth={this.props.resizeWidth}
-              onImageChange={this.updateParentState}
-              canvasMode={this.props.canvasMode}
-              points={this.props.userPoints}
-              validPoints={this.props.validPoints}
-              setPoint={this.setPoint}
-            />
+                  <TransitionGroup component={null}>
+                    {this.props.currentStep === 1 && (
+                      <CSSTransition classNames="fade" timeout={0}>
+                        <div className="ml-3">
+                          <StereoImage 
+                            session={this.props.files.session}
+                            idName="imageRight"
+                            image={this.props.files.imageRight}
+                            imageName={this.props.files.imageRightName} 
+                            labelText="Click to Upload Right Image"
+                            resizeWidth={this.props.resizeWidth}
+                            onImageChange={this.updateParentState}
+                            canvasMode="imageRight"
+                            points={this.props.userPoints}
+                            validPoints=""
+                            setPoint={this.setPoint}
+                          />
+                        </div>
+                      </CSSTransition>
+                    )}
+                  </TransitionGroup>
+                </div>
+              </CSSTransition>
+            )}
+          </TransitionGroup>
 
-            <TransitionGroup component={null}>
-              {this.props.currentStep === 1 && (
-                <CSSTransition classNames="fade" timeout={0}>
-                  <div className="ml-3">
-                    <StereoImage 
-                      session={this.props.files.session}
-                      idName="imageRight"
-                      image={this.props.files.imageRight}
-                      imageName={this.props.files.imageRightName} 
-                      labelText="Click to Upload Right Image"
-                      resizeWidth={this.props.resizeWidth}
-                      onImageChange={this.updateParentState}
-                      canvasMode="imageRight"
-                      points={this.props.userPoints}
-                      validPoints=""
-                      setPoint={this.setPoint}
-                    />
-                  </div>
-                </CSSTransition>
-              )}
-            </TransitionGroup>
-          </div>
+          {this.props.currentStep === 3 && (
+            <CSSTransition classNames="fade" timeout={0}>
+              <DisparityMaps
+                session={this.props.files.session}
+                params={this.props.params}
+                mapWidth={this.props.resizeWidth/2}
+                mapHeight={this.props.resizeHeight/2}
+                updateState={this.props.updateState}
+                handleOnclickNext={this.props.handleOnclickNext}
+                handleOnclickBack={this.props.handleOnclickBack}
+              />
 
-          {this.props.children}
+            </CSSTransition>
+          )}
 
         </div>
       </div>
