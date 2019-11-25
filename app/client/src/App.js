@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import convert from 'convert-units';
 import ImagePanel from './components/ImagePanel';
 import Sidebar from './components/Sidebar';
+import convert from 'convert-units';
 import redocircle from './icons/RedoCircle.svg';
 import './App.css';
 
