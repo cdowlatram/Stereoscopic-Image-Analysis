@@ -64,6 +64,23 @@ app.post('/focal_length', (req, res) => {
 		});
 });
 
+// AOV estimation endpoint
+app.post('/predict_aov', (req, res) => {
+	let image_name = req.body.image_name;
+
+	exec('python3 ' + root_path + '/python/aov_predictor.py ' 
+		+ root_path + '/images/temp/' + image_name, 
+		(err, stdout, stderr) => {
+			if(err || stderr) {
+				if(err) console.log(err);
+				if(stderr) console.log(stderr);
+				res.status(400).send('Error predicting AOV');
+			} else {
+				res.status(200).send(JSON.parse(stdout));
+			}
+		});
+});
+
 // Get valid input points
 app.post('/disparity_maps', (req, res) => {
 	// TODO: granulate error messages

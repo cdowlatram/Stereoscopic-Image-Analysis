@@ -22,18 +22,21 @@ class CameraSettings extends Component {
     form.append('image_name', this.props.imageName);
     
     let request = new XMLHttpRequest();
+    request.responseType = 'json';
     let react = this;
     request.onreadystatechange = function() {
       if(this.readyState === 4) {
         if(this.status === 200) {
-          react.changeSetting("focalLength", this.responseText);
+          console.log(this.response)
+          react.changeSetting("focalLength", this.response["focal_length"]);
+          react.changeSetting("sensorWidth", this.response["sensor_width"]);
         } else {
           react.changeSetting("errorLog", this.responseText);
         }
         react.setState({isLoading: false});
       }
     };
-    request.open("POST", "http://localhost:9000/focal_length");
+    request.open("POST", "http://localhost:9000/predict_aov");
     request.send(form);
   }
 
