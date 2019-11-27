@@ -135,14 +135,7 @@ class ImagePanel extends Component {
             </CSSTransition>
           )}
           
-          { this.props.estimatedDistance !== '' &&
-          (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-                              <div>
-                                <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {this.props.estimatedDistance} {this.props.measureUnit}</span>
-                              </div>
-                              <div></div>
-                            </div>)
-          }
+          
 
           { this.props.currentStep > 3 &&
           (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">

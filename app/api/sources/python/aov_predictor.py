@@ -43,7 +43,7 @@ def convert_aov_to_focal_length(aov):
   Sensor Width will be set to 35mm
   '''
   aov_rads = aov * (math.pi/180)
-  sensor_width = 88
+  sensor_width = 76
   focal_length = sensor_width / math.tan( aov_rads / 2 ) / 2
   focal_length = round(focal_length)
   results = {

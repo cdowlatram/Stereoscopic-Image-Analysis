@@ -28,6 +28,7 @@ app.get('/images/:file', (req, res) => {
 
 // Upload image 
 app.post('/upload', (req, res) => {
+
 	let image = req.files.image;
 	let session_id = req.body.session_id;
 	let image_name = session_id + '_' + image.name;
@@ -45,6 +46,12 @@ app.post('/upload', (req, res) => {
 	} else {
 		res.status(400).send('Bad file type, must be .jpg or .png');
 	}
+});
+
+app.post('/clear_images', (req, res) => {
+	exec('rm ' + root_path + '/images/temp/*.jpg')
+	exec('rm ' + root_path + '/images/temp/*.png')
+	res.status(200).send("");
 });
 
 // Focal length estimation endpoint
@@ -83,6 +90,9 @@ app.post('/predict_aov', (req, res) => {
 
 // Get valid input points
 app.post('/disparity_maps', (req, res) => {
+	exec('rm ' + root_path + '/images/*.jpg')
+	exec('rm ' + root_path + '/images/*.png')
+
 	// TODO: granulate error messages
 	let image_left_name = root_path + '/images/temp/' + req.body.image_left_name;
 	let image_right_name = root_path + '/images/temp/' + req.body.image_right_name;
@@ -121,8 +131,15 @@ app.post('/valid_points', (req, res) => {
 
 	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
 	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
-		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' + image_left_name.replace(/ /g,"\\ ") + ' ' + image_right_name.replace(/ /g,"\\ ") + ' ' + focal_length.toString() + ' ' + sensor_width.toString() + ' ' + min_disparity.toString() + ' ' + num_disparity.toString() + ' ' + window_size.toString();
-		console.log(py_command)
+		let py_command = 'python3 ' + root_path + '/python/valid_points.py ' 
+			+ image_left_name.replace(/ /g,"\\ ") + ' ' 
+			+ image_right_name.replace(/ /g,"\\ ") + ' ' 
+			+ focal_length.toString() + ' ' 
+			+ sensor_width.toString() + ' ' 
+			+ min_disparity.toString() + ' ' 
+			+ num_disparity.toString() + ' ' 
+			+ window_size.toString();
+
 		exec(py_command, {maxBuffer: 1024 * 10000}, (err, stdout, stderr) => {
 			if(err || stderr) {
 				if(err) console.log(err);
@@ -139,7 +156,6 @@ app.post('/valid_points', (req, res) => {
 
 // Estimate distance
 app.post('/estimate_distance', (req, res) => {
-	console.log(req.body)
 	// TODO: granulate error messages
 	let image_left_name = req.body.image_left_name;
 	let image_right_name = req.body.image_right_name;
@@ -151,6 +167,7 @@ app.post('/estimate_distance', (req, res) => {
 	let min_disparity = Number(req.body.min_disparity);
 	let num_disparity = Number(req.body.num_disparity);
 	let window_size = Number(req.body.window_size);
+	let is_ground_distance = req.body.is_ground_distance;
 
 	if((typeof(focal_length) === "number" && focal_length > 0 && focal_length <= 300) 
 	&& ((typeof(sensor_width) === "number" && sensor_width > 0 && sensor_width <= 300))) {
@@ -158,13 +175,21 @@ app.post('/estimate_distance', (req, res) => {
 		exec('python3 ' + root_path + '/python/predict_length.py ' 
 		+ root_path + '/images/temp/' + image_left_name + ' '
 		+ root_path + '/images/temp/' + image_right_name + ' ' 
-		+ focal_length.toString() + ' ' + sensor_width.toString() + ' ' 
-		+ reference_points[0][0].toString() + ' ' + reference_points[0][1].toString() + ' ' 
-		+ reference_points[1][0].toString() + ' ' + reference_points[1][1].toString() + ' ' 
-		+ reference_length.toString() + ' ' + measurement_points[0][0].toString() + ' ' 
-		+ measurement_points[0][1].toString() + ' ' + measurement_points[1][0].toString() + ' ' 
-		+ measurement_points[1][1].toString() + ' ' + min_disparity.toString() + ' ' 
-		+ num_disparity.toString() + ' ' + window_size.toString(), (err, stdout, stderr) => {
+		+ focal_length.toString() + ' ' 
+		+ sensor_width.toString() + ' ' 
+		+ reference_points[0][0].toString() + ' ' 
+		+ reference_points[0][1].toString() + ' ' 
+		+ reference_points[1][0].toString() + ' ' 
+		+ reference_points[1][1].toString() + ' ' 
+		+ reference_length.toString() + ' ' 
+		+ measurement_points[0][0].toString() + ' ' 
+		+ measurement_points[0][1].toString() + ' ' 
+		+ measurement_points[1][0].toString() + ' ' 
+		+ measurement_points[1][1].toString() + ' ' 
+		+ min_disparity.toString() + ' ' 
+		+ num_disparity.toString() + ' ' 
+		+ window_size.toString() + ' ' 
+		+ is_ground_distance, (err, stdout, stderr) => {
 			if(err || stderr) {
 				if(err) console.log(err);
 				if(stderr) console.log(stderr);

@@ -20,7 +20,7 @@ try:
     
     response = []
     for i in range(1,3):
-        for j in range(1,7):
+        for j in range(2,7):
             if i != j:
                 stereo.update_settings(i*16, j*16)
                 filename = session + "_" + str(i*16) + "_" + str(j*16) + ".jpg"

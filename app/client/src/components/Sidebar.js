@@ -101,10 +101,10 @@ class Sidebar extends Component {
 
                     <ReferencePoints 
                       referenceLength={this.props.referenceLength}
-                      clearPoints={this.clearPoints}
                       referenceUnit={this.props.referenceUnit}
+                      clearPoints={this.clearPoints}
                       onChangeHandler={this.onChangeHandler}
-                      updateState={this.props.updateState}
+                      updateAppState={this.props.updateState}
                     />
 
                     <div className="text-right mt-5">
@@ -129,6 +129,8 @@ class Sidebar extends Component {
 
                     <MeasurePoints 
                       params={this.props.params}
+                      estimatedDistance={this.props.estimatedDistance}
+                      measureUnit={this.props.measureUnit}
                       updateAppState={this.props.updateState}
                       clearPoints={this.clearPoints}
                       nextStep={this.props.handleOnclickNext}
