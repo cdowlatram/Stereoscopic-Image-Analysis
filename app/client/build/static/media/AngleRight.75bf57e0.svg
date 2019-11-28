@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="16px" viewBox="0 0 10 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>angle-right</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Back" transform="translate(0.000000, -4.000000)" fill="#0067EF" fill-rule="nonzero">
+            <g id="angle-right" transform="translate(5.000000, 12.000000) rotate(-180.000000) translate(-5.000000, -12.000000) translate(0.000000, 4.000000)">
+                <path d="M9.81510622,8.4249336 L2.11513244,15.8237775 C1.8686074,16.0587408 1.46997115,16.0587408 1.22344611,15.8237775 L0.184893784,14.8339322 C-0.0616312615,14.5989689 -0.0616312615,14.2190283 0.184893784,13.984065 L6.40047207,8 L0.184893784,2.01593501 C-0.0616312615,1.78097172 -0.0616312615,1.40103109 0.184893784,1.1660678 L1.22344611,0.176222465 C1.46997115,-0.0587408217 1.8686074,-0.0587408217 2.11513244,0.176222465 L9.81510622,7.5750664 C10.0616313,7.81002968 10.0616313,8.18997032 9.81510622,8.4249336 Z" id="Path"></path>
+            </g>
+        </g>
+    </g>
+</svg>

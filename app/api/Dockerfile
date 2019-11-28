@@ -16,7 +16,7 @@ COPY . /app/api
 
 # Run apt-get update within docker image to update package list.
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update || : && apt-get install -y \
         python3-pip \
         python3-dev
 

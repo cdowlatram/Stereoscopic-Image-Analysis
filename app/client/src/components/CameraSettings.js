@@ -7,7 +7,8 @@ class CameraSettings extends Component {
 
     this.state = {
       isLoading: false,
-      loadingMessage: 'Predicting Focal Length...'
+      loadingMessage: 'Predicting Focal Length...',
+      errorString: ''
     };
 
     this.changeSetting = this.changeSetting.bind(this);
@@ -31,7 +32,8 @@ class CameraSettings extends Component {
           react.changeSetting("focalLength", this.response["focal_length"]);
           react.changeSetting("sensorWidth", this.response["sensor_width"]);
         } else {
-          react.changeSetting("errorLog", this.responseText);
+          react.errorString = this.response;
+          react.changeSetting("errorLog", react.errorString);
         }
         react.setState({isLoading: false});
       }
