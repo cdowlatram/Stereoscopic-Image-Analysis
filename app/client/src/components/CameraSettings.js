@@ -32,8 +32,7 @@ class CameraSettings extends Component {
           react.changeSetting("focalLength", this.response["focal_length"]);
           react.changeSetting("sensorWidth", this.response["sensor_width"]);
         } else {
-          react.errorString = this.response;
-          react.changeSetting("errorLog", react.errorString);
+          react.changeSetting("errorLog", this.response);
         }
         react.setState({isLoading: false});
       }
