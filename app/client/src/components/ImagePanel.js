@@ -142,7 +142,7 @@ class ImagePanel extends Component {
                               <div>
                                 <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.props.referenceLength} {this.props.referenceUnit}</span>
                               </div>
-                              <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                              <div></div>
                             </div>)
           }
 
@@ -152,7 +152,7 @@ class ImagePanel extends Component {
                                     <span className="mr-5"><strong className="mr-3">Focal Length:</strong> {this.props.focalLength} mm</span>
                                     <span><strong className="mr-3">Sensor Width: {this.props.sensorWidth} mm</strong></span>
                                   </div>
-                                  <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                                  <div></div>
                                 </div>)
           }
 
