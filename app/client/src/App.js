@@ -62,6 +62,17 @@ class App extends Component {
     })
   }
 
+  componentDidMount() {
+    fetch('http://localhost:9000/clear_images/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+  }
+
   handleStateUpdate = newState => {
     this.setState(newState);
   }
@@ -212,6 +223,9 @@ class App extends Component {
             currentStep={this.state.currentStep}
             updateState={this.handleStateUpdate}
             referenceUnit={this.state.referenceUnit}
+            referenceLength={this.state.referenceLength}
+            measureUnit={this.state.measureUnit}
+            estimatedDistance={estimatedDistance}
             handleOnclickNext={this.handleOnclickNext}
             handleOnclickBack={this.handleOnclickBack}
           />

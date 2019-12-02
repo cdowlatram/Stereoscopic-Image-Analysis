@@ -11,17 +11,20 @@ WORKDIR /app/client
 COPY package.json /app/client
 COPY package-lock.json /app/client
 
+# copy client-side code into directory
+COPY . /app/client
+
 # Run apt-get update within docker image to update package list.
 RUN apt-get update -y
 
 # Install node dependencies
 RUN npm install
+RUN npm run build
 
 # Install pip3, pip3 will install the requirements.txt for the app
 # RUN apt-get install -y python3-pip python3-dev
 # RUN cd sources/python && pip3 install -r requirements.txt
 
-# copy client-side code into directory
-COPY . /app/client
 
-CMD ["npm", "start"]
+
+CMD ["serve -s", "build"]

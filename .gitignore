@@ -1,6 +1,8 @@
 website/node/node_modules/*
 app/api/node_modules/*
 app/client/node_modules/*
+app/api/sources/images/*jpg
+app/api/sources/images/temp/*jpg
 website/temp/*
 # website/node/config.js
 __pycache__/
@@ -8,4 +10,5 @@ __pycache__/
 notes
 .*
 !/.gitignore
+!app/.env
 *.h5

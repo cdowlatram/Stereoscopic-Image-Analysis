@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.36f3c81c.chunk.css",
+    "main.js": "/static/js/main.1072925c.chunk.js",
+    "main.js.map": "/static/js/main.1072925c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b240f91f.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b240f91f.js.map",
+    "static/js/2.a69e58cd.chunk.js": "/static/js/2.a69e58cd.chunk.js",
+    "static/js/2.a69e58cd.chunk.js.map": "/static/js/2.a69e58cd.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.7ca142e78e4eea050ea99c3faaef78a3.js": "/precache-manifest.7ca142e78e4eea050ea99c3faaef78a3.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.36f3c81c.chunk.css.map": "/static/css/main.36f3c81c.chunk.css.map",
+    "static/media/AngleRight.svg": "/static/media/AngleRight.75bf57e0.svg",
+    "static/media/AngleRightWhite.svg": "/static/media/AngleRightWhite.b30c9f00.svg",
+    "static/media/RedoCircle.svg": "/static/media/RedoCircle.b43f3016.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b240f91f.js",
+    "static/js/2.a69e58cd.chunk.js",
+    "static/css/main.36f3c81c.chunk.css",
+    "static/js/main.1072925c.chunk.js"
+  ]
+}

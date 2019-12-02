@@ -6,9 +6,9 @@ class ReferencePoints extends React.Component {
     const target = event.target;
     const value = target.value;
 
-    this.props.updateState({
+    this.props.updateAppState({
       referenceUnit: value,
-      measurenit: value
+      measureUnit: value
     });
   }
 

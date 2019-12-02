@@ -229,17 +229,24 @@ class Stereograph:
             f.write((ply_header % dict(vert_num=len(verts2))).encode('utf-8'))
             np.savetxt(f, verts2, fmt='%f %f %f %d %d %d ')
 
-    def calculate_distance(self, ix1, iy1, ix2, iy2):
+    def calculate_distance(self, ix1, iy1, ix2, iy2, is_ground_distance):
         if not self.image_map_points:
             self.generate_2d_3d_map()
 
         pt1 = self.image_map_points[ix1][iy1]
         pt2 = self.image_map_points[ix2][iy2]
+
+        # Calculate distance in xyz
         distance = math.sqrt((pt1["x"]-pt2["x"])**2 + (pt1["y"]-pt2["y"])**2 + (pt1["z"]-pt2["z"])**2)
+
+        if is_ground_distance == 1:
+            # Calculate distance only on xz plane
+            distance = math.sqrt((pt1["x"]-pt2["x"])**2 + (pt1["z"]-pt2["z"])**2)
+
         return distance * self.scale
 
     def calculate_set_scale(self, ix1, iy1, ix2, iy2, actual_distance):
-        distance = self.calculate_distance(ix1, iy1, ix2, iy2)
+        distance = self.calculate_distance(ix1, iy1, ix2, iy2, 0)
         self.scale = actual_distance/distance
 
     def __str__(self):

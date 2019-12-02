@@ -135,21 +135,14 @@ class ImagePanel extends Component {
             </CSSTransition>
           )}
           
-          { this.props.estimatedDistance !== '' &&
-          (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
-                              <div>
-                                <span className="mr-5"><strong className="mr-3">Estimated Length:</strong> {this.props.estimatedDistance} {this.props.measureUnit}</span>
-                              </div>
-                              <div></div>
-                            </div>)
-          }
+          
 
           { this.props.currentStep > 3 &&
           (<div className="parameter-box d-flex justify-content-between align-items-center mb-4">
                               <div>
                                 <span className="mr-5"><strong className="mr-3">Reference Length:</strong> {this.props.referenceLength} {this.props.referenceUnit}</span>
                               </div>
-                              <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                              <div></div>
                             </div>)
           }
 
@@ -159,7 +152,7 @@ class ImagePanel extends Component {
                                     <span className="mr-5"><strong className="mr-3">Focal Length:</strong> {this.props.focalLength} mm</span>
                                     <span><strong className="mr-3">Sensor Width: {this.props.sensorWidth} mm</strong></span>
                                   </div>
-                                  <div><button type="button" className="btn btn-secondary">Edit</button></div>
+                                  <div></div>
                                 </div>)
           }
 
