@@ -3,6 +3,12 @@
 This software is designed to interface with two smartphones running the iVCam app and use them as a stereoscopic camera.
 
 ## Setup
+
+### Dependencies
+To run this software, you will need to install the following python libraries:
+- CV2
+- NumPy
+
 ### Software
 The [iVCam](https://www.e2esoft.com/ivcam/) app should be installed on two iPhone or Android smartphone devices. These smartphones should ideally be of the same model, to ensure that the camera parameters are the same for both sides of the stereoscopic image.
 
