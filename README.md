@@ -23,5 +23,7 @@ mysql -u username -p images < /path/to/images_db.sql
 ```
 Alternatively, if you are using a program such as MySQL Workbench, you can use the import tool.
 
+The images in the database are from the [DEEPFOCAL](http://www.cs.cornell.edu/projects/1dsfm/) and [FocaLens](https://figshare.com/articles/FocaLens/3399169) datasets. The images will have to be downloaded seperately.
+
 ### AOV_Model_Transfer_Learning.ipynb
 This is the Jupyter notebook file we used to develop the angle of view model. If you want to see exactly how the model was developed, you could open and look through it. If you want to run the notebook itself, you can open it in a [Google Colab](https://colab.research.google.com/) instance, set the runtime to GPU, then run all the cells.

@@ -1,16 +1,19 @@
 # Database settings
-database_host = 'sd2.c9nvxjjovvt6.us-east-1.rds.amazonaws.com'
-database_user = 'admin'
-database_password = 'bgAHqMhOGFcNOVRmvT7n'
-database_db = 'Images'
+database_host = ''
+database_user = ''
+database_password = ''
+database_db = ''
 database_charset = 'utf8'
 
 # Path of local images to be processed
-files_path = 'C:/Users/Thomas_Main/Desktop/Senior Design/focalens/images'
+files_path = ''
+
+# Database index to start at for lookups. Useful for ignoring older data
+db_start_id = 0
 
 # Path to camera database
-sensor_db_path = 'C:/Users/Thomas_Main/workspace/Stereoscopic-Image-Analysis/image_downloader/sensor_database.csv'
+sensor_db_path = '/*path*/Stereoscopic-Image-Analysis/image_downloader/sensor_database_detailed.csv'
 
 # Flickr keys
-flickr_api_key = u'9a7b092e08990626dcb62d599eefd941'
-flickr_api_secret = u'1dfaa0f0550efa8f'
+flickr_api_key = u''
+flickr_api_secret = u''
