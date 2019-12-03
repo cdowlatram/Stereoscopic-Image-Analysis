@@ -33,5 +33,5 @@ services:
       - ./client/public:/app/client/public
     links:
       - server
-    command: serve -s build
+    command: serve -s -l 3000 build
      
