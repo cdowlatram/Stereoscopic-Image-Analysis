@@ -1,6 +1,8 @@
 website/node/node_modules/*
 app/api/node_modules/*
 app/client/node_modules/*
+app/api/sources/images/*jpg
+app/api/sources/images/temp/*jpg
 website/temp/*
 # website/node/config.js
 __pycache__/

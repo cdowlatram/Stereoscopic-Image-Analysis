@@ -21,7 +21,10 @@ class DisparityMaps extends Component {
   }
 
   getDisparityMaps = () => {
-    this.setState({isLoading: true});
+    this.setState({
+      loadingMessage: 'Creating disparity maps...',
+      isLoading: true
+    });
 
     // TODO: Do local data validation
     
@@ -51,7 +54,10 @@ class DisparityMaps extends Component {
   }
 
   getValidPoints = () => {
-    this.setState({isLoading: true});
+    this.setState({
+      loadingMessage: 'Getting valid selection points on image...',
+      isLoading: true
+    });
 
     // TODO: Do local data validation
     

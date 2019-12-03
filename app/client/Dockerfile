@@ -10,6 +10,7 @@ WORKDIR /app/client
 # import package.json dependency lists
 COPY package.json /app/client
 COPY package-lock.json /app/client
+RUN cat /app/client/package.json
 
 # copy client-side code into directory
 COPY . /app/client
@@ -26,5 +27,4 @@ RUN npm run build
 # RUN cd sources/python && pip3 install -r requirements.txt
 
 
-
-CMD ["serve -s", "build"]
+CMD "npm start"

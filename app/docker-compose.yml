@@ -5,6 +5,7 @@ services:
 # Node Container Setup #
   server:
     build: ./api
+    image: afsanta/sia_server
     expose:
       - ${APP_SERVER_PORT}
     environment:
@@ -20,6 +21,7 @@ services:
 
   client:
     build: ./client
+    image: afsanta/sia_client
     environment:
       - REACT_APP_PORT=${REACT_APP_PORT}
     expose:
@@ -31,5 +33,5 @@ services:
       - ./client/public:/app/client/public
     links:
       - server
-    command: npm start
+    command: ["npm", "start"]
      
