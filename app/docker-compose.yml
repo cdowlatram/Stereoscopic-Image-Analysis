@@ -33,5 +33,5 @@ services:
       - ./client/public:/app/client/public
     links:
       - server
-    command: ["npm", "start"]
+    command: serve -s build
      
