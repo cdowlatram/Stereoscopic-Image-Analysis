@@ -9,7 +9,6 @@ __pycache__/
 */venv/
 notes
 *.dab
-.*
 !/.gitignore
 !app/.env
 *.h5

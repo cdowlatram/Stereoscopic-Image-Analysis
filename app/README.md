@@ -9,7 +9,8 @@ The application consists of two seperate layers that work together. The api serv
 
 ### Node.js Server
 The api server used for this application is built using Node.js and Express. Node.js provides an asynchronous runtime environment for handling server-side requests with JavaScript. Express is a library that provides an easy way to handle requests and define behavior at specified endpoints.
-The api server provides the mathematical and computer vision functionality for the project. This server gives the client access to the api it defines, and it houses our predictive model, the code that utilized the model, creates disparity maps, and estimates distance, among other things.
+The api server provides the mathematical and computer vision functionality for the project. This server gives the client access to the api it defines, and it houses our predictive model, the code that utilized the model, creates disparity maps, and estimates distance, among other things. 
+The focal length and sensor width are two necessary parameters that our custom model predicts, and the application cannot run without it. The model is > 100MB, and cannot be hosted on Github. The download for the model, named **aov_model.h5** can be found [here.](https://drive.google.com/open?id=1FpsuG3Dg59DQWf_5KFFzZjzgSlU8eCa6) Once the download is finished, move the **aov_model.h5** file to /app/sources/python.
 
 ### React.js Front-End
 The application front-end is built using the React JavaScript library. The React library provides tools for defining custom components and behaviors using the modular power of JavaScript. The front-end builds the user interface, and sends requests to the api server using the user inputted parameters, including images, focal length, and reference measurements.
