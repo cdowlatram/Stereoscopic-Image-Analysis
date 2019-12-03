@@ -9,10 +9,12 @@ class Flickr():
 
 	def __init__(self):
 		
+		# Connect to Flickr API, initialize rate limiter
 		self.api = flickrapi.FlickrAPI(config.flickr_api_key, config.flickr_api_secret, format='parsed-json')
 		self.calls = 0
 		self.start_time = time.time()
-		
+	
+	# Get focal length for Flickr image with given ID
 	def get_focal_length(self, id):
 	
 		if self.calls == 3500:
@@ -23,7 +25,8 @@ class Flickr():
 			if data['tag'] == 'FocalLength':
 				return data['raw']['_content'].split()[0]
 		return False
-		
+	
+	# Ensures that we don't go over API rate limit (3600 calls/hour)
 	def rate_limiter(self):
 		
 		current_time = time.time()
