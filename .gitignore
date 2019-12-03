@@ -13,3 +13,4 @@ notes
 !/.gitignore
 !app/.env
 *.h5
+website/
