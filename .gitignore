@@ -8,6 +8,7 @@ website/temp/*
 __pycache__/
 */venv/
 notes
+*.dab
 .*
 !/.gitignore
 !app/.env
