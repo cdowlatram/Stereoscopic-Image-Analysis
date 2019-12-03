@@ -1,7 +1,6 @@
 version: '2'
 
 services:
-
 # Node Container Setup #
   server:
     build: ./api
