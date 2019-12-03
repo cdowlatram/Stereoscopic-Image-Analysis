@@ -26,7 +26,7 @@ Docker images create a uniform system environment which includes all of the depe
 
 Docker Compose is a tool for defining and multi container docker application. Docker Compose reads in a docker-compose.yml in the parent directory of the dockerized code modules, and defines the docker images as services that can be run in parallel. Installation guides for various common operating systems can be found [here.](https://docs.docker.com/compose/install/)
 
-)In this case, the services are the server, which provides the applications api code, and the client, which renders the front end and gives real-time requests to the server. The docker images run separately from one another, however, the communication ports used for interacting with the localhost and with each container remain open and functional.
+In this case, the services are the server, which provides the applications api code, and the client, which renders the front end and gives real-time requests to the server. The docker images run separately from one another, however, the communication ports used for interacting with the localhost and with each container remain open and functional.
 While in the /app/ directory of the application, this command builds and runs the image(s): 
 `docker-compose up --build`
 
