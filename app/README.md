@@ -1,4 +1,4 @@
-# Running the Stereoscopic Image Analyzer
+# Configuring and Running the Stereoscopic Image Analyzer
 ## What is the Stereoscopic Image Analyzer?
 The Stereoscopic Image Analyzer is a platform agnostic computer vision application for measuring distances in arbitrary stereographs.
 
@@ -18,3 +18,16 @@ The application front-end is built using the React JavaScript library. The React
 Both the client and api server are seperate npm environments. This means that they have seperate dependencies, and run as seperate processes. The api server must be set up as a proxy server for the client server to call its functions. Setting up these environments and knowing which commands to run can often lead to user error, and make it difficult to debug errors.
 
 ### Docker and Docker Compose
+Docker is a technology that creates executable software packages called containers. Docker Containers include all of the code needed for an application or environment to run, including system tools and libraries, code, and runtime information. Unlike virtual machines, a Docker uses the resources of the host machine rather than having its own.
+Installation guides for various common operating systems can be found [here.](https://docs.docker.com/v17.09/engine/installation/)
+
+Docker Compose is a tool for defining and multi container docker application. Docker Compose reads in a docker-compose.yml in the parent directory of the dockerized code modules, and defines the docker images as services that can be run in parallel. Installation guides for various common operating systems can be found [here.](https://docs.docker.com/compose/install/)
+
+)In this case, the services are the server, which provides the applications api code, and the client, which renders the front end and gives real-time requests to the server. The docker images run separately from one another, however, the communication ports used for interacting with the localhost and with each container remain open and functional.
+This command builds and runs the image: 
+`docker-compose up --build`
+
+Once the images are built, `docker-compose up` will run the application. The --build flag builds the images, and should only be used when changes in the repository environment are made.
+
+
+
