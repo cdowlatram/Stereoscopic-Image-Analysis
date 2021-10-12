@@ -7,7 +7,7 @@ Keras-Preprocessing==1.1.0
 keyring==10.1
 keyrings.alt==1.3
 numpy==1.17.4
-opencv-python==4.1.2.30
+opencv-python==4.2.0.32
 Pillow==6.2.1
 pyasn1==0.1.9
 pycrypto==2.6.1
